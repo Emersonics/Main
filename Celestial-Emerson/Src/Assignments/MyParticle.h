@@ -8,21 +8,33 @@
 class MyParticle
 {
 public:
-	MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration);
+public: //consrtuctor
+	MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan);
+	MyParticle();
 public:
 	float mass;
-	float timeFinished;
+	float lifeSpan;
 	MyVector position;
 	MyVector velocity;
 	MyVector acceleration;
-	float maxVelocity = 0;
-	float minVelocity = 0;
 protected:
 	void updatePosition(float time);
 	void updateVelocity(float time);
+	bool isDestroyed = false;
 public:
 	void Update(float time);
 	MyVector GetRenderPoint();
+	bool IsDestroyed() {
+		return isDestroyed;
+	}
+	void Destroy();
+	void checkLifeSpan(float time);
+public:
+	float dampening = 1;
+	void AddForce(MyVector v);
+	void ResetForce();
+protected:
+	MyVector accumulatedForce = MyVector();
 };
 
 #endif //MYPARTICLE

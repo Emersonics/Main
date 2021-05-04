@@ -3,9 +3,13 @@
 MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan):
 	mass(mass), position(position), velocity(velocity), acceleration(acceleration), lifeSpan(lifeSpan)
 {
+}MyParticle::MyParticle()
+{
 }
 void MyParticle::Update(float time)
 {
+	if (mass == 0) return;
+
 	updatePosition(time);
 	updateVelocity(time);
 	checkLifeSpan(time);
@@ -22,7 +26,7 @@ void MyParticle::checkLifeSpan(float time)
 
 void MyParticle::updateVelocity(float time)
 {
-	acceleration = acceleration + (accumulatedForce * (1 / mass));
+	acceleration += accumulatedForce * (1 / mass);
 	velocity = velocity + acceleration * time;
 	velocity = velocity * powf(dampening, time);
 }
@@ -46,7 +50,7 @@ void MyParticle::Destroy()
 
 void MyParticle::AddForce(MyVector v)
 {
-	accumulatedForce = accumulatedForce + v;
+	accumulatedForce +=  v;
 }
 
 void MyParticle::ResetForce()

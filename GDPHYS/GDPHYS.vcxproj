@@ -151,6 +151,7 @@
     <ClCompile Include="Assignments\GravityForceGenerator.cpp" />
     <ClCompile Include="Assignments\DragForceGenerator.cpp" />
     <ClCompile Include="Assignments\Springs\BungeeSpring.cpp" />
+    <ClCompile Include="Assignments\Collision\ContactResolver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Assignments\MyParticle.cpp" />
     <ClCompile Include="Assignments\MyVector.cpp" />
@@ -159,6 +160,8 @@
     <ClCompile Include="Assignments\RenderParticle.cpp" />
     <ClCompile Include="Assignments\Springs\ParticleSpring.cpp" />
     <ClCompile Include="Assignments\Collision\ParticleContact.cpp" />
+    <ClCompile Include="Assignments\Links\ParticleLink.cpp" />
+    <ClCompile Include="Assignments\Links\Rod.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignments\Springs\AnchoredSpring.h" />
@@ -174,6 +177,9 @@
     <ClInclude Include="Assignments\Springs\ParticleSpring.h" />
     <ClInclude Include="Assignments\Springs\BungeeSpring.h" />
     <ClInclude Include="Assignments\Collision\ParticleContact.h" />
+    <ClInclude Include="Assignments\Collision\ContactResolver.h" />
+    <ClInclude Include="Assignments\Links\ParticleLink.h" />
+    <ClInclude Include="Assignments\Links\Rod.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

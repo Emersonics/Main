@@ -1,4 +1,4 @@
-//Created by Emerson Paul P. Celestial and Joseph Cristopher C. Santos
+//Created by Emerson Paul P. Celestial
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -19,6 +19,8 @@
 #include "Assignments/Springs/ParticleSpring.h"
 #include "Assignments/Springs/BungeeSpring.h"
 #include "Assignments/Collision/ParticleContact.h"
+#include "Assignments/Collision/ContactResolver.h"
+#include "Assignments/Links/Rod.h"
 #define PI 3.14159265
 
 using namespace std::chrono_literals;
@@ -30,7 +32,7 @@ constexpr nanoseconds timestep(16ms);
 //function declarations
 void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float ranDirection,
-    float circleRadius, DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, ParticleContact& contact);
+    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r);
 float RandomFloat(float a, float b);
 
 
@@ -43,8 +45,14 @@ int main() {
     std::list<RenderParticle*> RenderParticles;
     Utils::offset = MyVector(0, 250);
     DragForceGenerator df = DragForceGenerator(); //setted to zero(0); kinetic friction
-    ParticleContact contact = ParticleContact();
-    
+    Rod r = Rod();
+    /*r->particles[0] = &particle1;
+    r->particles[1] = &particle2;
+    r->length = 100;
+    pWorld.Links.push_back(r);*/
+    //ParticleContact contact = ParticleContact(); 
+    vector <MyParticle*> particleList;
+
     /*
     * //for particles
     particle1.velocity = MyVector(-10, 0);
@@ -58,7 +66,7 @@ int main() {
     contact.collisionNormal = particle1.position - particle2.position;
     contact.collisionNormal.Normalize();
     contact.restitution = 1;
-    
+
     //for wall
     particle1.velocity = MyVector(-50, 0);
     contact.particles[1] = NULL;
@@ -93,25 +101,41 @@ int main() {
             //(float)ms.count() / 1000
             if (sample) //if (pWorld.Particles.size() < particleLimitSize)
             {
-                float lifeSpan;
-                lifeSpan = RandomFloat(100.0f, 100.0f); //randomLifeSpan value
+                /*float lifeSpan;
+                lifeSpan = RandomFloat(100.0f, 100.0f); //randomLifeSpan value*/
                 AnchoredSpring aSpring = AnchoredSpring(MyVector(350, -250), 5, 0.5);
                 BungeeSpring bSpring = BungeeSpring(MyVector(350, 0), 10.0f, 5.0f);
 
-                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(245, 20),
-                    MyVector(-30, 5), MyVector(0, 0), lifeSpan, 50.0f, df, aSpring, bSpring, contact);
-                instantiateParticles(RenderParticles, pWorld, 1.5f, MyVector(160, -30),
-                    MyVector(100, 5), MyVector(0, 0), lifeSpan, 50.0f, df, aSpring, bSpring, contact);
+                /*instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(150, 0),
+                    MyVector(-30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, particleList);
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(50, 0),
+                    MyVector(30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, particleList);*/
 
-                contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
+
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(350, 20),
+                    MyVector(0, 20), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r);
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(150, -30),
+                    MyVector(80, 0), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r);
+
+                /*contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
                 contact.collisionNormal.Normalize();
-                contact.restitution = 0.6;
+                contact.restitution = 0.6f;*/
+
+                MyVector dir = particleList[0]->position - particleList[1]->position;
+                dir.Normalize();
+
+                pWorld.AddContact(particleList[0], particleList[1], 1, dir);
+                r.length = 500;
+                pWorld.Links.push_back(&r);
+
                 sample = !sample;
             }
 
             //Updates the shapes and particles
             pWorld.Update((float)ms.count() / 1000);
             //contact.Resolve((float)ms.count() / 1000); //Contact ResolutionTesting
+            /*cout << "V of a: " << contact.particles[0]->velocity.x << "," << contact.particles[0]->velocity.y << endl;
+            cout << "V of b: " << contact.particles[1]->velocity.x << "," << contact.particles[1]->velocity.y << endl;*/
 
             curr_ns -= timestep;
 
@@ -140,49 +164,59 @@ int main() {
 }
 
 //instantiate a new particle
-void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld, 
-    float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, float circleRadius, 
-    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, ParticleContact& contact)
+void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
+    float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan,
+    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r)
 {
     MyParticle* myP = new MyParticle(mass, position, velocity, acceleration, lifeSpan);
-    sf::CircleShape* myS = new sf::CircleShape(circleRadius);
+    //add particle to the PhysicWorld
+    pWorld.addParticle(myP);
+    sf::CircleShape* myS = new sf::CircleShape(myP->radius);
+    /*sf::CircleShape* myS = new sf::CircleShape(myP->radius);*/
 
-    int randomColor;
-    randomColor = rand() % 3;
-    switch (randomColor)
-    {
-    case 1:
-        myS->setFillColor(sf::Color::Red);
-        break;
-    case 2:
-        myS->setFillColor(sf::Color::Blue);
-        break;
-    case 3:
-        myS->setFillColor(sf::Color::White);
-        break;
-    }
+
     //random addForce
-    float randomX;
+    /*float randomX;
     randomX = RandomFloat(-0.3f, 0.3f);
     float randomForce;
     randomForce = RandomFloat(9000.0f, 16000.0f);
-    myP->AddForce(MyVector(0, -1 * randomForce));
+    myP->AddForce(MyVector(0, -1 * randomForce));*/
 
-    //add particle to the PhysicWorld
-    pWorld.addParticle(myP);
-
-    ParticleSpring* pS = new ParticleSpring(myP, 5, 1);
+    //ParticleSpring* pS = new ParticleSpring(myP, 5, 1);
     //pWorld.foreceRegistry.Add(myP, &df);    //adds the friction
     //pWorld.foreceRegistry.Add(myP, &aSpring);    //adds the spring
     //pWorld.foreceRegistry.Add(myP, &bSpring);    //adds the spring
     //pWorld.foreceRegistry.Add(otherParticle, pS);    //adds the ParticleSpring; this should be a connection to another particle
 
+    static int particleIndex = 0;
+
+    int randomColor;
+    randomColor = rand() % 3;
+    switch (particleIndex)
+    {
+    case 0:
+        myS->setFillColor(sf::Color::White);
+        break;
+    case 1:
+        myS->setFillColor(sf::Color::Blue);
+        break;
+    case 2:
+        myS->setFillColor(sf::Color::Red);
+        break;
+    }
+    myS->setOrigin(myS->getRadius(), myS->getRadius());
+
     RenderParticle* myRp = new RenderParticle(myP, myS);
     RenderParticles.push_back(myRp);
 
-    static int particleIndex = 0;
     myP->dampening = 1;
-    contact.particles[particleIndex++] = myP;
+    particleList.push_back(myP);
+
+    r.particles[particleIndex] = myP;
+
+    particleIndex++;
+
+    //contact.particles[particleIndex++] = myP;
     /*
     * //for particles
     myP->dampening = 1;

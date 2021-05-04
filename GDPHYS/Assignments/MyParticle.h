@@ -7,9 +7,9 @@
 
 class MyParticle
 {
-public:
 public: //consrtuctor
 	MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan);
+	MyParticle();
 public:
 	float mass;
 	float lifeSpan;
@@ -34,6 +34,10 @@ public:
 	void ResetForce();
 protected:
 	MyVector accumulatedForce = MyVector();
+public:
+	float radius = 50;
+	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
+	float restitution = 1;
 };
 
 #endif //MYPARTICLE

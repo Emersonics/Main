@@ -4,9 +4,22 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <stddef.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+#include <list>
+#include <iterator>
 #include "Assignments/MyParticle.h"
 #include "Assignments/MyVector.h"
 #include "Assignments/Utils.h"
+#include "Assignments/PhysicsWorld.h"
+#include "Assignments/RenderParticle.h"
+#include "Assignments/DragForceGenerator.h"
+#include "Assignments/Springs/AnchoredSpring.h"
+#include "Assignments/Springs/ParticleSpring.h"
+#include "Assignments/Springs/BungeeSpring.h"
+#include "Assignments/Collision/ParticleContact.h"
+#define PI 3.14159265
 
 using namespace std::chrono_literals;
 using namespace std::chrono;
@@ -14,76 +27,100 @@ using namespace std::chrono;
 //16ms = 1 frame in a 60fps
 constexpr nanoseconds timestep(16ms);
 
-MyParticle& instantiateParticle(sf::Color color, int mass, MyVector velocity,
-    MyVector acceleration, MyVector position, sf::CircleShape& shape);
-void updateShapes(MyParticle& particle, MyVector& renderPoint, sf::CircleShape& circle, float count);
-bool finishLineChecker(sf::CircleShape shape1, sf::CircleShape shape2, sf::CircleShape shape3, std::string rankings[3],
-    MyParticle& particle1, MyParticle& particle2, MyParticle& particle3, float timer);
-void displayStatistics(std::string rankings[3], MyParticle& particle, std::string name, int index);
+//function declarations
+void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
+    float mass, MyVector position, MyVector velocity, MyVector acceleration, float ranDirection,
+    float circleRadius, DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, ParticleContact& contact);
+float RandomFloat(float a, float b);
 
 
 int main() {
+    srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(700, 500), "P6 Test", sf::Style::Default);
 
+    //PhysicsWorld, Renderparticle, and Utils instance
+    PhysicsWorld pWorld = PhysicsWorld();
+    std::list<RenderParticle*> RenderParticles;
     Utils::offset = MyVector(0, 250);
+    DragForceGenerator df = DragForceGenerator(); //setted to zero(0); kinetic friction
+    ParticleContact contact = ParticleContact();
 
-    //GameState
-    bool allAreFinished = false;
-    std::string rankings[3] = { "","","" };
-    float timer = 0.0f;
-    //renderPoint instance
-    MyVector renderPoint1;
-    MyVector renderPoint2;
-    MyVector renderPoint3;
-    //FinishLine instance
-    sf::RectangleShape line;
-    line.setSize(sf::Vector2f(700, 3));
-    line.setOrigin(line.getSize().x/2, line.getSize().y / 2);
-    line.setRotation(90);
-    line.setPosition(500, window.getSize().y / 2);
-    //Circle Shapes instance
-    sf::CircleShape shape1(10);
-    sf::CircleShape shape2(10);
-    sf::CircleShape shape3(10);
-    //MyParticle class instance
-    MyParticle Bourbon = instantiateParticle(sf::Color::White, 10, MyVector(35, 0), MyVector(8, 0), MyVector(0,-225), shape1);
-    MyParticle Creek = instantiateParticle(sf::Color::Blue, 10, MyVector(26, 0), MyVector(11, 0), MyVector(0,0), shape2);
-    MyParticle Scarlet = instantiateParticle(sf::Color::Red, 10, MyVector(55, 0), MyVector(3, 0), MyVector(0,225), shape3);
+    /*
+    * //for particles
+    particle1.velocity = MyVector(-10, 0);
+    particle2.velocity = MyVector(10, 0);
+    particle1.dampening = 1;
+    particle2.dampening = 1;
+
+    ParticleContact contact = ParticleContact();
+    contact.particles[0] = &particle1;
+    contact.particles[1] = &particle2;
+    contact.collisionNormal = particle1.position - particle2.position;
+    contact.collisionNormal.Normalize();
+    contact.restitution = 1;
+
+    //for wall
+    particle1.velocity = MyVector(-50, 0);
+    contact.particles[1] = NULL;
+    contact.collisionNormal = MyVector(1,0); //bounce back to the right
+    */
+
     //clock/frame 
     using clock = high_resolution_clock;
     auto curr_time = clock::now();
     auto prev_time = curr_time;
     nanoseconds curr_ns(0ns);
 
+    //particle effects properties
+    int particleLimitSize = 25;
+
     sf::Event event;
 
-    while (!allAreFinished) {
+    bool sample = true;
+
+    while (1) {
         curr_time = clock::now();
         auto dur = duration_cast<nanoseconds> (curr_time - prev_time);
         prev_time = curr_time;
 
         curr_ns += dur;
         if (curr_ns >= timestep) {
+
             auto ms = duration_cast<milliseconds>(curr_ns);
 
             //Call the update when it reaches a cetain timestep
             //ms is in milisecs while engine is using secs so we divide by 1000
             //(float)ms.count() / 1000
-            timer += (float)ms.count() / 1000;
-            //Updates the shapes
-            updateShapes(Bourbon, renderPoint1, shape1, (float)ms.count());
-            updateShapes(Creek, renderPoint2, shape2, (float)ms.count());
-            updateShapes(Scarlet, renderPoint3, shape3, (float)ms.count());
-            //Checks if all shapes are past the finish line
-            allAreFinished = finishLineChecker(shape1, shape2, shape3, rankings,
-                Bourbon, Creek, Scarlet, timer);
-            if (allAreFinished)
+            if (sample) //if (pWorld.Particles.size() < particleLimitSize)
             {
-                window.close();
-                displayStatistics(rankings, Bourbon, "Bourbon", 0);
-                displayStatistics(rankings, Creek, "Creek", 1);
-                displayStatistics(rankings, Scarlet, "Scarlet", 2);
+                /*float lifeSpan;
+                lifeSpan = RandomFloat(100.0f, 100.0f); //randomLifeSpan value*/
+                AnchoredSpring aSpring = AnchoredSpring(MyVector(350, -250), 5, 0.5);
+                BungeeSpring bSpring = BungeeSpring(MyVector(350, 0), 10.0f, 5.0f);
+
+                /*instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(150, 0),
+                    MyVector(-30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, contact);
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(50, 0),
+                    MyVector(30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, contact);*/
+
+
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(245, 20),
+                    MyVector(-30, 5), MyVector(0, 0), 100, 50.0f, df, aSpring, bSpring, contact);
+                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(160, -30),
+                    MyVector(100, 5), MyVector(0, 0), 100, 50.0f, df, aSpring, bSpring, contact);
+
+                contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
+                contact.collisionNormal.Normalize();
+                contact.restitution = 0.6f;
+
+                sample = !sample;
             }
+
+            //Updates the shapes and particles
+            pWorld.Update((float)ms.count() / 1000);
+            contact.Resolve((float)ms.count() / 1000); //Contact ResolutionTesting
+            cout << "V of a: " << contact.particles[0]->velocity.x << "," << contact.particles[0]->velocity.y << endl;
+            cout << "V of b: " << contact.particles[1]->velocity.x << "," << contact.particles[1]->velocity.y << endl;
 
             curr_ns -= timestep;
 
@@ -98,79 +135,84 @@ int main() {
             }
 
             window.clear();
-            window.draw(line);
-            window.draw(shape1);
-            window.draw(shape2);
-            window.draw(shape3);
+            //iterates the particles then draw
+            for (std::list<RenderParticle*>::iterator i = RenderParticles.begin();
+                i != RenderParticles.end(); i++)
+            {
+                (*i)->Draw(&window);
+            }
             window.display();
         }
     }
-    system("pause");
+    std::system("pause");
     return 0;
 }
 
-MyParticle& instantiateParticle(sf::Color color, int mass, MyVector velocity, MyVector acceleration, 
-    MyVector position, sf::CircleShape& shape)
+//instantiate a new particle
+void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
+    float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, float circleRadius,
+    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, ParticleContact& contact)
 {
-    MyParticle particle = MyParticle(mass, position, velocity, acceleration);
+    MyParticle* myP = new MyParticle(mass, position, velocity, acceleration, lifeSpan);
+    //add particle to the PhysicWorld
+    pWorld.addParticle(myP);
+    sf::CircleShape* myS = new sf::CircleShape(circleRadius);
 
-    shape.setFillColor(color);
-    shape.setOrigin(shape.getRadius(), shape.getRadius());
-    MyVector renderPoint = particle.GetRenderPoint();
-    shape.setPosition(renderPoint.x, renderPoint.y);
+    //random addForce
+    /*float randomX;
+    randomX = RandomFloat(-0.3f, 0.3f);
+    float randomForce;
+    randomForce = RandomFloat(9000.0f, 16000.0f);
+    myP->AddForce(MyVector(0, -1 * randomForce));*/
 
-    return particle;
+
+    //ParticleSpring* pS = new ParticleSpring(myP, 5, 1);
+    //pWorld.foreceRegistry.Add(myP, &df);    //adds the friction
+    //pWorld.foreceRegistry.Add(myP, &aSpring);    //adds the spring
+    //pWorld.foreceRegistry.Add(myP, &bSpring);    //adds the spring
+    //pWorld.foreceRegistry.Add(otherParticle, pS);    //adds the ParticleSpring; this should be a connection to another particle
+
+    static int particleIndex = 0;
+
+    int randomColor;
+    randomColor = rand() % 3;
+    switch (particleIndex)
+    {
+    case 0:
+        myS->setFillColor(sf::Color::White);
+        break;
+    case 1:
+        myS->setFillColor(sf::Color::Blue);
+        break;
+    case 2:
+        myS->setFillColor(sf::Color::Red);
+        break;
+    }
+    myS->setOrigin(myS->getRadius(), myS->getRadius());
+
+    RenderParticle* myRp = new RenderParticle(myP, myS);
+    RenderParticles.push_back(myRp);
+
+    myP->dampening = 1;
+    contact.particles[particleIndex++] = myP;
+    /*
+    * //for particles
+    myP->dampening = 1;
+    contact.particles[particleIndex++] = myP;
+
+    //for wall
+    particle1.velocity = MyVector(-50, 0);
+    contact.particles[1] = NULL;
+    contact.collisionNormal = MyVector(1,0); //bounce back to the right
+    */
 }
 
-void updateShapes(MyParticle& particle, MyVector& renderPoint, sf::CircleShape& circle, float count)
+//returns a random float between the two float values
+float RandomFloat(float a, float b)
 {
-    particle.Update(count / 1000);
-    renderPoint = particle.GetRenderPoint();
-    circle.setPosition(renderPoint.x, renderPoint.y);
-    //for min and max setter
-    if (particle.maxVelocity < particle.velocity.x)
-        particle.maxVelocity = particle.velocity.x;
-    if (particle.minVelocity > particle.velocity.x)
-        particle.minVelocity = particle.velocity.x;
-}
-
-bool finishLineChecker(sf::CircleShape shape1, sf::CircleShape shape2, sf::CircleShape shape3, std::string rankings[3],
-    MyParticle& particle1, MyParticle& particle2, MyParticle& particle3, float timer)
-{
-    const std::string ranksList[3] = { "1st", "2nd", "3rd" };
-    static int finishers = 0;
-    if (shape1.getPosition().x >= 500 && rankings[0]._Equal(""))
-    {
-        particle1.timeFinished = timer;
-        rankings[0] = ranksList[finishers];
-        ++finishers;
-    }
-    if (shape2.getPosition().x >= 500 && rankings[1]._Equal(""))
-    {
-        particle2.timeFinished = timer;
-        rankings[1] = ranksList[finishers];
-        ++finishers;
-    }
-    if (shape3.getPosition().x >= 500 && rankings[2]._Equal(""))
-    {
-        particle3.timeFinished = timer;
-        rankings[2] = ranksList[finishers];
-        ++finishers;
-    }
-    if (shape1.getPosition().x >= 500 && shape2.getPosition().x >= 500 && shape3.getPosition().x >= 500)
-    {
-        return true;
-    }
-    return false;
-}
-
-
-
-void displayStatistics(std::string rankings[3], MyParticle& particle, std::string name, int index)
-{
-    std::cout << name << " " << rankings[index] << std::endl;
-    printf("Mag. of velocity at finish line %0.2f m/s\n", particle.velocity.getMagnitude());
-    printf("Ave. Velocity in the last 500m (%0.2f,%0.2f) m/s\n", (particle.maxVelocity + particle.minVelocity)/2, 0);
-    printf("%0.2fsecs\n\n", particle.timeFinished);
+    float random = ((float)rand()) / (float)RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
 }
 

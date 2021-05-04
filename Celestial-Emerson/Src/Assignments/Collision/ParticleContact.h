@@ -3,13 +3,9 @@
 
 class ParticleContact
 {
-public:
-	//Measure of how much they've overlapped
-	float depth = 0;
-public:
+protected:
 	float GetSeparatingSpeed();
 	void ResolveVelocity(float time);
-	void ResolveInterpenetration(float time);
 
 public:
 	MyParticle* particles[2];
