@@ -20,7 +20,7 @@ protected:
 	ContactResolver resolver = ContactResolver(20);
 public:
 	std::vector<ParticleContact*> Contacts;
-	void AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal);
+	void AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal, float depth);
 public:
 	std::list<MyParticle*> Particles;
 	void addParticle(MyParticle* particle);
@@ -32,9 +32,9 @@ public:
 public:
 	PhysicsWorld();
 public:
-	ForceRegistry foreceRegistry;
+	ForceRegistry forceRegistry;
 protected:
-	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 0));
+	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 9.8));
 };
 
 #endif // !PHYSICSWORLD

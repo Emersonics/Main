@@ -8,7 +8,7 @@ public:
 	virtual void UpdateForce(MyParticle* p, float time)
 	{
 		//base definition
-		p->AddForce(MyVector(0,0));
+		p->AddForce(MyVector());
 	}
 };
 

@@ -3,7 +3,7 @@ void ParticleContact::Resolve(float time)
 {
 	//Call Resolve Velocity for now
 	ResolveVelocity(time);
-	//ResolveInterpenetration(time);
+	ResolveInterpenetration(time);
 }
 
 float ParticleContact::GetSeparatingSpeed()
@@ -62,7 +62,6 @@ void ParticleContact::ResolveInterpenetration(float time)
 	if (depth <= 0) {
 		return;
 	}
-
 	float totalMass = (float)1 / particles[0]->mass;
 	if (particles[1]) totalMass += (float)1 / particles[1]->mass;
 
@@ -72,12 +71,12 @@ void ParticleContact::ResolveInterpenetration(float time)
 	MyVector depthVector = collisionNormal * depthMagnitude;
 
 	MyVector a_Pos = depthVector * ((float)1 / particles[0]->mass);
-	particles[0]->position = particles[0]->position + a_Pos;
+	particles[0]->position += a_Pos;
 
 	if (particles[1])
 	{
 		MyVector b_Pos = depthVector * (-(float)1 / particles[1]->mass);
-		particles[1]->position = particles[1]->position + b_Pos;
+		particles[1]->position += b_Pos;
 	}
 
 	depth = 0;

@@ -1,6 +1,6 @@
 #include "PhysicsWorld.h"
 
-void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal)
+void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal, float depth)
 {
 	ParticleContact* toAdd = new ParticleContact();
 
@@ -8,6 +8,7 @@ void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution,
 	toAdd->particles[1] = p2;
 	toAdd->restitution = restitution;
 	toAdd->collisionNormal = contactNormal;
+	toAdd->depth = depth;
 
 	Contacts.push_back(toAdd);
 }
@@ -15,13 +16,14 @@ void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution,
 void PhysicsWorld::addParticle(MyParticle* particle)
 {
 	Particles.push_back(particle);
-	foreceRegistry.Add(particle, &Gravity);
+	forceRegistry.Add(particle, &Gravity);
 }
 
 void PhysicsWorld::Update(float time)
 {
 	UpdateParticeList();
-	foreceRegistry.UpdateForces(time);
+	forceRegistry.UpdateForces(time);
+
 	for (std::list<MyParticle*>::iterator i = Particles.begin();
 		i != Particles.end(); i++)
 	{
@@ -36,8 +38,8 @@ void PhysicsWorld::Update(float time)
 		resolver.Max_Iterations = Contacts.size() * 2;
 		resolver.ResolveContacts(Contacts, time);
 	}
-	cout << "V of a: " << Contacts[0]->particles[0]->velocity.x << "," << Contacts[0]->particles[0]->velocity.y << endl;
-	cout << "V of b: " << Contacts[0]->particles[1]->velocity.x << "," << Contacts[0]->particles[1]->velocity.y << endl;
+	/*cout << "V of a: " << Contacts[0]->particles[0]->velocity.x << "," << Contacts[0]->particles[0]->velocity.y << endl;
+	cout << "V of b: " << Contacts[0]->particles[1]->velocity.x << "," << Contacts[0]->particles[1]->velocity.y << endl;*/
 }
 
 void PhysicsWorld::UpdateParticeList()
@@ -88,10 +90,10 @@ void PhysicsWorld::GetOverlaps()
 				//1
 				float restitution = (*a)->restitution;
 				//0.5
-				if ((*b)->restitution < (*a)->restitution)
+				if ((*b)->restitution < restitution)
 					restitution = (*b)->restitution;
 
-				AddContact(*a, *b, restitution, dir);
+				AddContact(*a, *b, restitution, dir, depth);
 			}
 		}
 	}

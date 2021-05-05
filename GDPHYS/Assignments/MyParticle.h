@@ -35,7 +35,7 @@ public:
 protected:
 	MyVector accumulatedForce = MyVector();
 public:
-	float radius = 50;
+	float radius = 10;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
 	float restitution = 1;
 };

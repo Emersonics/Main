@@ -10,7 +10,7 @@ public:
 	//Returns a contact if particles violate the condition for the link
 	virtual ParticleContact* GetContact() { return nullptr; }
 
-protected:
+public:
 	float GetDistance();
 };
 

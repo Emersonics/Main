@@ -32,7 +32,7 @@ constexpr nanoseconds timestep(16ms);
 //function declarations
 void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float ranDirection,
-    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r);
+    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r, ParticleContact& contact);
 float RandomFloat(float a, float b);
 
 
@@ -50,7 +50,8 @@ int main() {
     r->particles[1] = &particle2;
     r->length = 100;
     pWorld.Links.push_back(r);*/
-    //ParticleContact contact = ParticleContact(); 
+
+    ParticleContact contact = ParticleContact(); 
     vector <MyParticle*> particleList;
 
     /*
@@ -112,10 +113,10 @@ int main() {
                     MyVector(30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, particleList);*/
 
 
-                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(350, 20),
-                    MyVector(0, 20), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r);
-                instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(150, -30),
-                    MyVector(80, 0), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r);
+                instantiateParticles(RenderParticles, pWorld, 1.0f, MyVector(350, -250),
+                    MyVector(-100, 0), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r, contact);
+                instantiateParticles(RenderParticles, pWorld, 1.0f, MyVector(150, -250),
+                    MyVector(80, 0), MyVector(0, 0), 100, df, aSpring, bSpring, particleList, r, contact);
 
                 /*contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
                 contact.collisionNormal.Normalize();
@@ -124,8 +125,8 @@ int main() {
                 MyVector dir = particleList[0]->position - particleList[1]->position;
                 dir.Normalize();
 
-                pWorld.AddContact(particleList[0], particleList[1], 1, dir);
-                r.length = 500;
+                //pWorld.AddContact(particleList[0], particleList[1], 1, dir, );
+                r.length = 200;
                 pWorld.Links.push_back(&r);
 
                 sample = !sample;
@@ -166,7 +167,7 @@ int main() {
 //instantiate a new particle
 void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan,
-    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r)
+    DragForceGenerator& df, AnchoredSpring& aSpring, BungeeSpring& bSpring, vector <MyParticle*>& particleList, Rod& r, ParticleContact& contact)
 {
     MyParticle* myP = new MyParticle(mass, position, velocity, acceleration, lifeSpan);
     //add particle to the PhysicWorld
@@ -183,7 +184,7 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     myP->AddForce(MyVector(0, -1 * randomForce));*/
 
     //ParticleSpring* pS = new ParticleSpring(myP, 5, 1);
-    //pWorld.foreceRegistry.Add(myP, &df);    //adds the friction
+    //pWorld.forceRegistry.Add(myP, &df);    //adds the friction
     //pWorld.foreceRegistry.Add(myP, &aSpring);    //adds the spring
     //pWorld.foreceRegistry.Add(myP, &bSpring);    //adds the spring
     //pWorld.foreceRegistry.Add(otherParticle, pS);    //adds the ParticleSpring; this should be a connection to another particle
@@ -211,17 +212,16 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
 
     myP->dampening = 1;
     particleList.push_back(myP);
-
     r.particles[particleIndex] = myP;
 
-    particleIndex++;
-
-    //contact.particles[particleIndex++] = myP;
     /*
-    * //for particles
+    contact.particles[particleIndex] = myP;
+    //for particles
     myP->dampening = 1;
-    contact.particles[particleIndex++] = myP;
+    contact.particles[particleIndex] = myP;*/
 
+    particleIndex++;
+    /*
     //for wall
     particle1.velocity = MyVector(-50, 0);
     contact.particles[1] = NULL;
