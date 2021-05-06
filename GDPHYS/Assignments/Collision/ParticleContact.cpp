@@ -3,7 +3,7 @@ void ParticleContact::Resolve(float time)
 {
 	//Call Resolve Velocity for now
 	ResolveVelocity(time);
-	ResolveInterpenetration(time);
+	//ResolveInterpenetration(time);
 }
 
 float ParticleContact::GetSeparatingSpeed()
@@ -41,6 +41,7 @@ void ParticleContact::ResolveVelocity(float time)
 
 	//	i	=	dV	*	m; //divide since the mass is 1/m
 	float impulse_mag = deltaSpeed / totalMass;
+
 	//Get the impulse vector using the contact normal
 	MyVector Impulse = collisionNormal * impulse_mag;
 
@@ -54,6 +55,8 @@ void ParticleContact::ResolveVelocity(float time)
 		MyVector V_1 = Impulse * (-(float)1 / particles[1]->mass);
 		particles[1]->velocity = particles[1]->velocity + V_1;
 	}
+	std::cout << "V of a:" << particles[0]->velocity.x << ", " << particles[0]->velocity.y << std::endl;
+	std::cout << "V of b:" << particles[1]->velocity.x << ", " << particles[1]->velocity.y << std::endl;
 }
 
 void ParticleContact::ResolveInterpenetration(float time)

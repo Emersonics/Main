@@ -31,13 +31,22 @@ void PhysicsWorld::Update(float time)
 		(*i)->Update(time);
 	}
 
-	GenerateContacts();
+	/*GenerateContacts();
 
 	if (Contacts.size() > 0)
 	{
 		resolver.Max_Iterations = Contacts.size() * 2;
 		resolver.ResolveContacts(Contacts, time);
 	}
+	for (std::list<MyParticle*>::iterator i = Particles.begin();
+		i != Particles.end(); i++)
+	{
+		cout << "V of Particle: " << (*i)->velocity.x << "," << (*i)->velocity.y << endl;
+	}*/
+	/*if(Contacts.size() == 0 && Contacts[0]->particles[0] != NULL)
+		cout << "Hello" << endl;
+	if (Contacts.size() == 0 && Contacts[0]->particles[1] != NULL)
+		cout << "Hello" << endl;*/
 	/*cout << "V of a: " << Contacts[0]->particles[0]->velocity.x << "," << Contacts[0]->particles[0]->velocity.y << endl;
 	cout << "V of b: " << Contacts[0]->particles[1]->velocity.x << "," << Contacts[0]->particles[1]->velocity.y << endl;*/
 }

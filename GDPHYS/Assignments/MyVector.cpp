@@ -1,6 +1,6 @@
 #include "MyVector.h"
 
-MyVector::MyVector(float x, float y, float z) : x(x), y(-y), z(z)
+MyVector::MyVector(float x, float y, float z) : x(x), y(y), z(z)
 {
 	
 }
@@ -45,6 +45,11 @@ MyVector MyVector::operator*(const float scalar)
 	return newVector;
 }
 
+float MyVector::operator*(MyVector v)
+{
+	return this->x * v.x + this->y * v.y;
+}
+
 void MyVector::operator+=(const MyVector vec)
 {
 	this->x += vec.x;
@@ -81,10 +86,6 @@ MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)
 	return newVector;
 }
 
-float MyVector::operator*(MyVector v)
-{
-	return this->x * v.x + this->y * v.y;
-}
 
 float MyVector::SquareMagnitude()
 {
