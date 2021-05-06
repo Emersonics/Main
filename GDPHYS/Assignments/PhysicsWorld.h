@@ -28,7 +28,7 @@ public:
 protected:
 	void UpdateParticeList();
 public:
-	MyVector gravity = MyVector(0, 0); //this is downward
+	//MyVector gravity = MyVector(0, 0); //this is downward
 public:
 	PhysicsWorld();
 public:

@@ -29,25 +29,25 @@ MyVector MyVector::getDirection(float magnitude)
 
 MyVector MyVector::operator+(MyVector vec)
 {
-	MyVector newVector(this->x + vec.x, this->y + vec.y);
+	MyVector newVector(this->x + vec.x, this->y + vec.y, 0);
 	return newVector;
 }
 
 MyVector MyVector::operator-(MyVector vec)
 {
-	MyVector newVector(this->x - vec.x, this->y - vec.y);
+	MyVector newVector(this->x - vec.x, this->y - vec.y, 0);
 	return newVector;
 }
 
 MyVector MyVector::operator*(const float scalar)
 {
-	MyVector newVector(this->x * scalar, this->y * scalar);
+	MyVector newVector(this->x * scalar, this->y * scalar, 0);
 	return newVector;
 }
 
-float MyVector::operator*(MyVector v)
+float MyVector::operator*(const MyVector v)
 {
-	return this->x * v.x + this->y * v.y;
+	return (this->x * v.x) + (this->y * v.y);
 }
 
 void MyVector::operator+=(const MyVector vec)
@@ -70,12 +70,12 @@ void MyVector::operator*=(const float scalar)
 
 MyVector MyVector::ComponentProduct(const MyVector v)
 {
-	return MyVector(x * v.x, y * v.y);
+	return MyVector(x * v.x, y * v.y, 0);
 }
 
 float MyVector::getScalarProduct(MyVector vec1, MyVector vec2)
 {
-	return (vec1.x * vec2.x) + (vec1.y * vec2.y);
+	return (vec1.x * vec2.x) + (vec1.y * vec2.y, 0);
 }
 
 MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)

@@ -29,7 +29,7 @@ public:
 	void Destroy();
 	void checkLifeSpan(float time);
 public:
-	float dampening = 0.8;
+	float dampening = 1.0f;
 	void AddForce(MyVector v);
 	void ResetForce();
 protected:
@@ -37,7 +37,7 @@ protected:
 public:
 	float radius = 50;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
-	float restitution = 0.5;
+	float restitution = 1;
 };
 
 #endif //MYPARTICLE

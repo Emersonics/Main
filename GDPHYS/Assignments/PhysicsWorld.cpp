@@ -31,13 +31,14 @@ void PhysicsWorld::Update(float time)
 		(*i)->Update(time);
 	}
 
-	/*GenerateContacts();
+	GenerateContacts();
 
 	if (Contacts.size() > 0)
 	{
 		resolver.Max_Iterations = Contacts.size() * 2;
 		resolver.ResolveContacts(Contacts, time);
 	}
+	/*
 	for (std::list<MyParticle*>::iterator i = Particles.begin();
 		i != Particles.end(); i++)
 	{
