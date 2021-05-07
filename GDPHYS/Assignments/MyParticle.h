@@ -9,7 +9,7 @@
 class MyParticle
 {
 public: //consrtuctor
-	MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan);
+	MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, bool stationary = false);
 	MyParticle();
 public:
 	float mass;
@@ -39,6 +39,10 @@ public:
 	float radius = 25;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
 	float restitution = 1;
+private:
+	bool stationary;
+	MyVector startPos;
+	void stationarySetting();
 };
 
 #endif //MYPARTICLE

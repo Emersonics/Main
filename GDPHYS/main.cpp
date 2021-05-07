@@ -32,8 +32,7 @@ constexpr nanoseconds timestep(16ms);
 //function declarations
 void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, DragForceGenerator& df,
-    vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList,
-    Rod& r, ParticleContact& contact);
+    vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList, ParticleContact& contact);
 float RandomFloat(float a, float b);
 
 
@@ -46,7 +45,6 @@ int main() {
     std::list<RenderParticle*> RenderParticles;
     Utils::offset = MyVector(0, 0);
     DragForceGenerator df = DragForceGenerator(0,0); //setted to zero(0); kinetic friction
-    Rod r = Rod();
     /*r->particles[0] = &particle1;
     r->particles[1] = &particle2;
     r->length = 100;
@@ -78,30 +76,116 @@ int main() {
 
     /*float lifeSpan;
         lifeSpan = RandomFloat(100.0f, 100.0f); //randomLifeSpan value*/
-    AnchoredSpring aSpring = AnchoredSpring(MyVector(100, 200), 5, 0.5);
-    AnchoredSpring aSpring1 = AnchoredSpring(MyVector(200, 200), 5, 0.5);
-    AnchoredSpring aSpring2 = AnchoredSpring(MyVector(300, 200), 5, 0.5);
-    AnchoredSpring aSpring3 = AnchoredSpring(MyVector(400, 200), 5, 0.5);
-    AnchoredSpring aSpring4 = AnchoredSpring(MyVector(500, 200), 5, 0.5);
-    BungeeSpring bSpring1 = BungeeSpring(MyVector(100, 200), 10.0f, 5.0f);
-    BungeeSpring bSpring2 = BungeeSpring(MyVector(200, 200), 10.0f, 5.0f);
+    AnchoredSpring aSpring1 = AnchoredSpring(MyVector(100, 200), 5, 0.5);
+    AnchoredSpring aSpring2 = AnchoredSpring(MyVector(200, 200), 5, 0.5);
+    AnchoredSpring aSpring3 = AnchoredSpring(MyVector(300, 200), 5, 0.5);
+    AnchoredSpring aSpring4 = AnchoredSpring(MyVector(400, 200), 5, 0.5);
+    AnchoredSpring aSpring5 = AnchoredSpring(MyVector(500, 200), 5, 0.5);
+    AnchoredSpring aSpring6 = AnchoredSpring(MyVector(600, 200), 5, 0.5);
+    
+    /*BungeeSpring bSpring1 = BungeeSpring(MyVector(100, 200), 10.0f, 5.0f);
+    BungeeSpring bSpring2 = BungeeSpring(MyVector(200, 200), 10.0f, 5.0f);*/
 
-    /*instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(150, 0),
-        MyVector(-30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, particleList);
-    instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(50, 0),
-        MyVector(30, 0), MyVector(0, 0), 100.0f, 50.0f, df, aSpring, bSpring, particleList);*/
+    //for rods connections
+    Rod r1 = Rod();
+    Rod r2 = Rod();
+    Rod r3 = Rod();
+    Rod r4 = Rod();
+    Rod r5 = Rod();
+    Rod r6 = Rod();
 
+    //for anchors
+    MyParticle* anchor1 = new MyParticle(1.0f, MyVector(100, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor1);
+    sf::CircleShape* anchorS1 = new sf::CircleShape(anchor1->radius);
+    anchorS1->setFillColor(sf::Color::Red);
+    anchorS1->setOrigin(anchorS1->getRadius(), anchorS1->getRadius());
+    RenderParticle* anchorRp1 = new RenderParticle(anchor1, anchorS1);
+    RenderParticles.push_back(anchorRp1);
 
+    MyParticle* anchor2 = new MyParticle(1.0f, MyVector(200, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor2);
+    sf::CircleShape* anchorS2 = new sf::CircleShape(anchor2->radius);
+    anchorS2->setFillColor(sf::Color::Red);
+    anchorS2->setOrigin(anchorS2->getRadius(), anchorS2->getRadius());
+    RenderParticle* anchorRp2 = new RenderParticle(anchor2, anchorS2);
+    RenderParticles.push_back(anchorRp2);
+
+    MyParticle* anchor3 = new MyParticle(1.0f, MyVector(300, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor3);
+    sf::CircleShape* anchorS3 = new sf::CircleShape(anchor3->radius);
+    anchorS3->setFillColor(sf::Color::Red);
+    anchorS3->setOrigin(anchorS3->getRadius(), anchorS3->getRadius());
+    RenderParticle* anchorRp3 = new RenderParticle(anchor3, anchorS3);
+    RenderParticles.push_back(anchorRp3);
+
+    MyParticle* anchor4 = new MyParticle(1.0f, MyVector(400, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor4);
+    sf::CircleShape* anchorS4 = new sf::CircleShape(anchor4->radius);
+    anchorS4->setFillColor(sf::Color::Red);
+    anchorS4->setOrigin(anchorS4->getRadius(), anchorS4->getRadius());
+    RenderParticle* anchorRp4 = new RenderParticle(anchor4, anchorS4);
+    RenderParticles.push_back(anchorRp4);
+
+    MyParticle* anchor5 = new MyParticle(1.0f, MyVector(500, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor5);
+    sf::CircleShape* anchorS5 = new sf::CircleShape(anchor5->radius);
+    anchorS5->setFillColor(sf::Color::Red);
+    anchorS5->setOrigin(anchorS5->getRadius(), anchorS5->getRadius());
+    RenderParticle* anchorRp5 = new RenderParticle(anchor5, anchorS5);
+    RenderParticles.push_back(anchorRp5);
+
+    MyParticle* anchor6 = new MyParticle(1.0f, MyVector(600, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
+    pWorld.addParticle(anchor6);
+    sf::CircleShape* anchorS6 = new sf::CircleShape(anchor6->radius);
+    anchorS6->setFillColor(sf::Color::Red);
+    anchorS6->setOrigin(anchorS6->getRadius(), anchorS6->getRadius());
+    RenderParticle* anchorRp6 = new RenderParticle(anchor6, anchorS6);
+    RenderParticles.push_back(anchorRp6);
+
+    //for the balls
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(100, 200),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(200, 200),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(300, 200),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(400, 200),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(500, 200),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+    instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(600, 200),
+        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+
+    //anchor and balls connections
+    r1.particles[0] = anchor1;
+    r1.particles[1] = particleList[0];
+    r2.particles[0] = anchor2;
+    r2.particles[1] = particleList[1];
+    r3.particles[0] = anchor3;
+    r3.particles[1] = particleList[2];
+    r4.particles[0] = anchor4;
+    r4.particles[1] = particleList[3];
+    r5.particles[0] = anchor5;
+    r5.particles[1] = particleList[4];
+    r6.particles[0] = anchor6;
+    r6.particles[1] = particleList[5];
+
+    //sets the settings for rods
+    r1.length = 200;
+    pWorld.Links.push_back(&r1);
+    r2.length = 200;
+    pWorld.Links.push_back(&r2);
+    r3.length = 200;
+    pWorld.Links.push_back(&r3);
+    r4.length = 200;
+    pWorld.Links.push_back(&r4);
+    r5.length = 200;
+    pWorld.Links.push_back(&r5);
+    r6.length = 200;
+    pWorld.Links.push_back(&r6);
+
+    //line/cable representation
     sf::VertexArray line1(sf::Lines, 2);
     line1[0].position = sf::Vector2f(100, 0);
     line1[0].color = sf::Color::White;
@@ -122,10 +206,9 @@ int main() {
     line5[0].position = sf::Vector2f(500, 0);
     line5[0].color = sf::Color::White;
 
-    /*instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(245, 20),
-        MyVector(-30, 5), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);
-    instantiateParticles(RenderParticles, pWorld, 1.5f, MyVector(160, -30),
-        MyVector(100, 5), MyVector(0, 0), 100, df, particleList, shapeList, r, contact);*/
+    sf::VertexArray line6(sf::Lines, 2);
+    line6[0].position = sf::Vector2f(600, 0);
+    line6[0].color = sf::Color::White;
 
     /*contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
     contact.collisionNormal.Normalize();
@@ -135,8 +218,6 @@ int main() {
     dir.Normalize();*/
 
     //pWorld.AddContact(particleList[0], particleList[1], 1, dir, );
-    r.length = 20;
-    //pWorld.Links.push_back(&r);
 
     //realistic spring between two balls
     /*ParticleSpring* pS1 = new ParticleSpring(particleList[0], 5, 1);
@@ -145,11 +226,12 @@ int main() {
     pWorld.forceRegistry.Add(particleList[0], pS2);    //adds the ParticleSpring; this should be a connection to another particle*/
 
     //pWorld.forceRegistry.Add(myP, &df);    //adds the friction
-    pWorld.forceRegistry.Add(particleList[0], &aSpring);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[1], &aSpring1);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[2], &aSpring2);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[3], &aSpring3);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[4], &aSpring4);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[0], &aSpring1);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[1], &aSpring2);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[2], &aSpring3);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[3], &aSpring4);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[4], &aSpring5);    //adds the spring
+    pWorld.forceRegistry.Add(particleList[5], &aSpring6);    //adds the spring
     //pWorld.forceRegistry.Add(particleList[0], &bSpring1);    //adds the spring
     //pWorld.forceRegistry.Add(particleList[1], &bSpring2);    //adds the spring
     //pWorld.forceRegistry.Add(myP, &bSpring);    //adds the spring
@@ -184,15 +266,11 @@ int main() {
             //Updates the shapes and particles
             pWorld.Update((float)ms.count() / 1000);
             line1[1].position = sf::Vector2f(particleList[0]->position.x, particleList[0]->position.y);
-            line1[1].color = sf::Color::White;
             line2[1].position = sf::Vector2f(particleList[1]->position.x, particleList[1]->position.y);
-            line2[1].color = sf::Color::White;
             line3[1].position = sf::Vector2f(particleList[2]->position.x, particleList[2]->position.y);
-            line3[1].color = sf::Color::White;
             line4[1].position = sf::Vector2f(particleList[3]->position.x, particleList[3]->position.y);
-            line4[1].color = sf::Color::White;
             line5[1].position = sf::Vector2f(particleList[4]->position.x, particleList[4]->position.y);
-            line5[1].color = sf::Color::White;
+            line6[1].position = sf::Vector2f(particleList[5]->position.x, particleList[5]->position.y);
             //contact.Resolve((float)ms.count() / 1000); //Contact ResolutionTesting
             /*cout << "V of a: " << particleList[0]->position.x << "," << particleList[0]->position.y << endl;
             cout << "V of b: " << particleList[1]->position.x << "," << particleList[1]->position.y << endl;*/
@@ -208,7 +286,7 @@ int main() {
                     break;
                 }
             }
-
+            std::cout << particleList.size() << endl;
             window.clear();
             //iterates the particles then draw
             for (std::list<RenderParticle*>::iterator i = RenderParticles.begin();
@@ -221,6 +299,7 @@ int main() {
             window.draw(line3);
             window.draw(line4);
             window.draw(line5);
+            window.draw(line6);
             window.display();
         }
     }
@@ -231,8 +310,7 @@ int main() {
 //instantiate a new particle
 void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWorld& pWorld,
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, DragForceGenerator& df,
-    vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList,
-    Rod& r, ParticleContact& contact)
+    vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList, ParticleContact& contact)
 {
     MyParticle* myP = new MyParticle(mass, position, velocity, acceleration, lifeSpan);
     //add particle to the PhysicWorld
@@ -255,11 +333,9 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     RenderParticle* myRp = new RenderParticle(myP, myS);
     RenderParticles.push_back(myRp);
 
-    myP->dampening = 1;
     contact.particles[particleIndex] = myP;
     particleList.push_back(myP);
     shapeList.push_back(myS);
-    r.particles[particleIndex] = myP;
 
     /*//for particles
     myP->dampening = 1;*/
