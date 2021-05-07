@@ -1,18 +1,24 @@
 #include "MyParticle.h"
 
-MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan):
+MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan) :
 	mass(mass), position(position), velocity(velocity), acceleration(acceleration), lifeSpan(lifeSpan)
 {
-}MyParticle::MyParticle()
-{
+
 }
+MyParticle::MyParticle()
+{
+
+}
+
+
+
 void MyParticle::Update(float time)
 {
 	if (mass == 0) return;
 
 	updatePosition(time);
 	updateVelocity(time);
-	checkLifeSpan(time);
+	checkLifeSpan(time); 
 	ResetForce();
 }
 

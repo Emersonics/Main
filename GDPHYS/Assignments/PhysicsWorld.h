@@ -34,7 +34,7 @@ public:
 public:
 	ForceRegistry forceRegistry;
 protected:
-	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 0)); //9.8 - negative velocity(downward)
+	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 9.8)); //9.8 - negative velocity(downward)
 };
 
 #endif // !PHYSICSWORLD

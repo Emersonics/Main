@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include <math.h>
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 class MyParticle
 {
@@ -35,7 +36,7 @@ public:
 protected:
 	MyVector accumulatedForce = MyVector();
 public:
-	float radius = 50;
+	float radius = 25;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
 	float restitution = 1;
 };
