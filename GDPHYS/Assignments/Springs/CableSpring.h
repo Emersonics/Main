@@ -10,11 +10,11 @@ private:
 	//the spring constant
 	float springConstant;
 	//the rest kength of this spring
-	float cableLength;
+	float restLength;
 
 public:
 	CableSpring(MyVector _pos, float _spring, float _restLen) :
-		anchorPoint(_pos), springConstant(_spring), cableLength(_restLen) {}
+		anchorPoint(_pos), springConstant(_spring), restLength(_restLen) {}
 	void UpdateForce(MyParticle* particle, float time)override;
 };
 

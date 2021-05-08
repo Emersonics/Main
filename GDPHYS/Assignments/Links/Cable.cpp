@@ -1,6 +1,6 @@
-#include "Rod.h"
+#include "Cable.h"
 
-ParticleContact* Rod::GetContact()
+ParticleContact* Cable::GetContact()
 {
 	float curr_len = GetDistance();
 
@@ -21,13 +21,14 @@ ParticleContact* Rod::GetContact()
 		ret->collisionNormal = dir;
 		ret->depth = curr_len - length;
 	}
-	else if (curr_len < length)
+	/*else if (curr_len < length)
 	{
 		ret->collisionNormal = dir * -1;
 		ret->depth = length - curr_len;
-	}
+	}*/
 
 	ret->restitution = restitution;
 
 	return ret;
 }
+

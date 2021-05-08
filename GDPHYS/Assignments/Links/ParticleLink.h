@@ -12,5 +12,6 @@ public:
 
 public:
 	float GetDistance();
+	float GetDistance(MyVector pos1, MyVector pos2);
 };
 

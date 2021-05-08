@@ -69,6 +69,9 @@
     <ClCompile Include="Assignments\Springs\CableSpring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Assignments\Links\Cable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignments\MyParticle.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assignments\Springs\CableSpring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assignments\Links\Cable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
