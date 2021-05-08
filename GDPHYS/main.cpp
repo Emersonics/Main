@@ -99,7 +99,7 @@ int main() {
     anchorS1->setFillColor(sf::Color::Red);
     anchorS1->setOrigin(anchorS1->getRadius(), anchorS1->getRadius());
     RenderParticle* anchorRp1 = new RenderParticle(anchor1, anchorS1);
-    RenderParticles.push_back(anchorRp1);
+    //RenderParticles.push_back(anchorRp1);
 
     MyParticle* anchor2 = new MyParticle(1.0f, MyVector(300, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
     pWorld.addParticle(anchor2);
@@ -107,7 +107,7 @@ int main() {
     anchorS2->setFillColor(sf::Color::Red);
     anchorS2->setOrigin(anchorS2->getRadius(), anchorS2->getRadius());
     RenderParticle* anchorRp2 = new RenderParticle(anchor2, anchorS2);
-    RenderParticles.push_back(anchorRp2);
+    //RenderParticles.push_back(anchorRp2);
 
     MyParticle* anchor3 = new MyParticle(1.0f, MyVector(400, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
     pWorld.addParticle(anchor3);
@@ -115,7 +115,7 @@ int main() {
     anchorS3->setFillColor(sf::Color::Red);
     anchorS3->setOrigin(anchorS3->getRadius(), anchorS3->getRadius());
     RenderParticle* anchorRp3 = new RenderParticle(anchor3, anchorS3);
-    RenderParticles.push_back(anchorRp3);
+    //RenderParticles.push_back(anchorRp3);
 
     MyParticle* anchor4 = new MyParticle(1.0f, MyVector(500, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
     pWorld.addParticle(anchor4);
@@ -123,7 +123,7 @@ int main() {
     anchorS4->setFillColor(sf::Color::Red);
     anchorS4->setOrigin(anchorS4->getRadius(), anchorS4->getRadius());
     RenderParticle* anchorRp4 = new RenderParticle(anchor4, anchorS4);
-    RenderParticles.push_back(anchorRp4);
+    //RenderParticles.push_back(anchorRp4);
 
     MyParticle* anchor5 = new MyParticle(1.0f, MyVector(600, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
     pWorld.addParticle(anchor5);
@@ -131,19 +131,19 @@ int main() {
     anchorS5->setFillColor(sf::Color::Red);
     anchorS5->setOrigin(anchorS5->getRadius(), anchorS5->getRadius());
     RenderParticle* anchorRp5 = new RenderParticle(anchor5, anchorS5);
-    RenderParticles.push_back(anchorRp5);
+    //RenderParticles.push_back(anchorRp5);
 
     //for the balls
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(200, 400),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+        MyVector(100, 0), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(300, 400),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(400, 400),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(500, 400),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList, contact);
     instantiateParticles(RenderParticles, pWorld, 5.0f, MyVector(600, 400),
-        MyVector(0, 100), MyVector(0, 0), 100, df, particleList, shapeList, contact);
+        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList, contact);
 
     //anchor and balls connections
     r1.particles[0] = anchor1;

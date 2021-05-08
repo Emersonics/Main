@@ -6,7 +6,7 @@ void ContactResolver::ResolveContacts(std::vector<ParticleContact*> contacts, fl
 	for (unsigned i = Curr_Iteration; i < Max_Iterations; i++)
 	{
 		//ranks the contacts from lowest to highest SeparatingSpeed
-		for (unsigned x = 1; x < contacts.size() - 1; x++)
+		for (unsigned x = 1; x < contacts.size(); x++)
 		{
 			if (contacts[0]->GetSeparatingSpeed() > contacts[x]->GetSeparatingSpeed() || contacts[x]->depth > 0)
 			{
