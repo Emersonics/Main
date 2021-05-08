@@ -20,6 +20,7 @@ ParticleContact* Rod::GetContact()
 	{
 		ret->collisionNormal = dir;
 		ret->depth = curr_len - length;
+		cout << "Hello: " << curr_len << endl;
 	}
 	else if (curr_len < length)
 	{
