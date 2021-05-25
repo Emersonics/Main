@@ -1,17 +1,34 @@
 #include "MyParticle.h"
 
-MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan):
-	mass(mass), position(position), velocity(velocity), acceleration(acceleration), lifeSpan(lifeSpan)
+MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, bool stationary) :
+	mass(mass), position(position), velocity(velocity), acceleration(acceleration), lifeSpan(lifeSpan), stationary(stationary), startPos(position)
 {
-}MyParticle::MyParticle()
-{
+
 }
+MyParticle::MyParticle()
+{
+
+}
+
 void MyParticle::Update(float time)
 {
+	if (mass == 0) return;
+	
 	updatePosition(time);
 	updateVelocity(time);
-	checkLifeSpan(time);
+	checkLifeSpan(time); 
 	ResetForce();
+	//exclusive for cable anchors
+	if (stationary)
+		stationarySetting();
+}
+
+void MyParticle::stationarySetting()
+{
+	this->position.x = startPos.x;
+	this->position.y = startPos.y;
+	this->velocity.x = 0;
+	this->velocity.y = 0;
 }
 
 void MyParticle::checkLifeSpan(float time)
@@ -24,7 +41,7 @@ void MyParticle::checkLifeSpan(float time)
 
 void MyParticle::updateVelocity(float time)
 {
-	acceleration = acceleration + (accumulatedForce * (1 / mass));
+	acceleration = acceleration + accumulatedForce * (1 / mass);
 	velocity = velocity + acceleration * time;
 	velocity = velocity * powf(dampening, time);
 }

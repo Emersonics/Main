@@ -152,7 +152,6 @@
     <ClCompile Include="Assignments\DragForceGenerator.cpp" />
     <ClCompile Include="Assignments\Springs\BungeeSpring.cpp" />
     <ClCompile Include="Assignments\Collision\ContactResolver.cpp" />
-    <ClCompile Include="Assignments\Springs\CableSpring.cpp" />
     <ClCompile Include="Assignments\Links\Cable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Assignments\MyParticle.cpp" />
@@ -182,7 +181,6 @@
     <ClInclude Include="Assignments\Collision\ContactResolver.h" />
     <ClInclude Include="Assignments\Links\ParticleLink.h" />
     <ClInclude Include="Assignments\Links\Rod.h" />
-    <ClInclude Include="Assignments\Springs\CableSpring.h" />
     <ClInclude Include="Assignments\Links\Cable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -28,13 +28,13 @@ public:
 protected:
 	void UpdateParticeList();
 public:
-	//MyVector gravity = MyVector(0, 0); //this is downward
+	MyVector gravity = MyVector(0, 0); //this is downward
 public:
 	PhysicsWorld();
 public:
 	ForceRegistry forceRegistry;
 protected:
-	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 9.8)); //9.8 - negative velocity(downward)
+	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 0)); //9.8 - negative velocity(downward)
 };
 
 #endif // !PHYSICSWORLD

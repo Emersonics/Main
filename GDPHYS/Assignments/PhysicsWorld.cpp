@@ -23,7 +23,6 @@ void PhysicsWorld::Update(float time)
 {
 	UpdateParticeList();
 	forceRegistry.UpdateForces(time);
-
 	for (std::list<MyParticle*>::iterator i = Particles.begin();
 		i != Particles.end(); i++)
 	{
@@ -38,18 +37,6 @@ void PhysicsWorld::Update(float time)
 		resolver.Max_Iterations = Contacts.size() * 2;
 		resolver.ResolveContacts(Contacts, time);
 	}
-	/*
-	for (std::list<MyParticle*>::iterator i = Particles.begin();
-		i != Particles.end(); i++)
-	{
-		cout << "V of Particle: " << (*i)->velocity.x << "," << (*i)->velocity.y << endl;
-	}*/
-	/*if(Contacts.size() == 0 && Contacts[0]->particles[0] != NULL)
-		cout << "Hello" << endl;
-	if (Contacts.size() == 0 && Contacts[0]->particles[1] != NULL)
-		cout << "Hello" << endl;*/
-	/*cout << "V of a: " << Contacts[0]->particles[0]->velocity.x << "," << Contacts[0]->particles[0]->velocity.y << endl;
-	cout << "V of b: " << Contacts[0]->particles[1]->velocity.x << "," << Contacts[0]->particles[1]->velocity.y << endl;*/
 }
 
 void PhysicsWorld::UpdateParticeList()

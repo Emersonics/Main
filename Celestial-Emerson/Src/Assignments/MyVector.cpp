@@ -2,7 +2,7 @@
 
 MyVector::MyVector(float x, float y, float z) : x(x), y(y), z(z)
 {
-	this->y = -1 * y;
+	
 }
 
 //gets the direction
@@ -10,16 +10,20 @@ void MyVector::Normalize()
 {
 	float n = getMagnitude();
 	if (n > 0) {
-		(*this) = (*this) * ((1.0f) / n);
+		(*this) *= ((1.0f) / n);
 	}
 }
 
 float MyVector::getMagnitude()
 {
-	float magnitude;
-	magnitude = sqrt(pow(this->x, 2) + pow(this->y, 2));
-	return magnitude;
+	return sqrt(SquareMagnitude());
 }
+
+float MyVector::getMagnitude(MyVector b)
+{
+	return sqrt(powf(this->x - b.x, 2) + powf(this->y - b.y, 2));
+}
+
 
 MyVector MyVector::getDirection(float magnitude)
 {
@@ -31,26 +35,31 @@ MyVector MyVector::getDirection(float magnitude)
 
 MyVector MyVector::operator+(MyVector vec)
 {
-	MyVector newVector(this->x + vec.x, this->y + vec.y);
+	MyVector newVector(this->x + vec.x, this->y + vec.y, 0);
 	return newVector;
 }
 
 MyVector MyVector::operator-(MyVector vec)
 {
-	MyVector newVector(this->x - vec.x, this->y - vec.y);
+	MyVector newVector(this->x - vec.x, this->y - vec.y, 0);
 	return newVector;
 }
 
 MyVector MyVector::operator*(const float scalar)
 {
-	MyVector newVector(this->x * scalar, this->y * scalar);
+	MyVector newVector(this->x * scalar, this->y * scalar, 0);
 	return newVector;
 }
 
-void MyVector::operator+=(MyVector vec)
+float MyVector::operator*(const MyVector v)
 {
-	this->x = x + vec.x;
-	this->y = y + vec.y;
+	return (this->x * v.x) + (this->y * v.y);
+}
+
+void MyVector::operator+=(const MyVector vec)
+{
+	this->x += vec.x;
+	this->y += vec.y;
 }
 
 void MyVector::operator-=(MyVector vec)
@@ -65,15 +74,14 @@ void MyVector::operator*=(const float scalar)
 	this->y = y * scalar;
 }
 
-MyVector MyVector::getComponentProduct(MyVector vec1, MyVector vec2)
+MyVector MyVector::ComponentProduct(const MyVector v)
 {
-	MyVector newVector(vec1.x * vec2.x, vec1.y * vec2.y);
-	return newVector;
+	return MyVector(x * v.x, y * v.y, 0);
 }
 
 float MyVector::getScalarProduct(MyVector vec1, MyVector vec2)
 {
-	return (vec1.x * vec2.x) + (vec1.y * vec2.y);
+	return (vec1.x * vec2.x) + (vec1.y * vec2.y, 0);
 }
 
 MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)
@@ -84,7 +92,14 @@ MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)
 	return newVector;
 }
 
-float MyVector::operator*(MyVector v)
+
+float MyVector::SquareMagnitude()
 {
-	return this->x * v.x + this->y * v.y;
+	return (x * x) + (y *y);
+}
+
+void MyVector::Invert()
+{
+	x = -x;
+	y = -y;
 }

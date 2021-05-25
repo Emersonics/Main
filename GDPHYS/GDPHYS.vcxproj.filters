@@ -66,9 +66,6 @@
     <ClCompile Include="Assignments\Links\Rod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assignments\Springs\CableSpring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Assignments\Links\Cable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -120,9 +117,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assignments\Links\Rod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Assignments\Springs\CableSpring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assignments\Links\Cable.h">

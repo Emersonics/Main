@@ -19,6 +19,12 @@ float MyVector::getMagnitude()
 	return sqrt(SquareMagnitude());
 }
 
+float MyVector::getMagnitude(MyVector b)
+{
+	return sqrt(powf(this->x - b.x, 2) + powf(this->y - b.y, 2));
+}
+
+
 MyVector MyVector::getDirection(float magnitude)
 {
 	MyVector direction(this->x, this->y, 0);

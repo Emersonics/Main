@@ -13,7 +13,8 @@ using namespace std;
 
 	public:
 		MyVector(float x = 0, float y = 0, float z = 0); //only called once, when an object is created
-		float getMagnitude();
+		float getMagnitude(); 
+		float getMagnitude(MyVector b);
 		MyVector getDirection(float magnitude);
 
 		//HW03

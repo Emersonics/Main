@@ -34,7 +34,7 @@ public:
 	void AddForce(MyVector v);
 	void ResetForce();
 protected:
-	MyVector accumulatedForce = MyVector();
+	MyVector accumulatedForce = MyVector(0,0,0);
 public:
 	float radius = 25;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)

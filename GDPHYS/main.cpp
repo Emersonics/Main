@@ -45,179 +45,169 @@ int main() {
     //PhysicsWorld, Renderparticle, and Utils instance
     PhysicsWorld pWorld = PhysicsWorld();
     std::list<RenderParticle*> RenderParticles;
-    Utils::offset = MyVector(0, 0);
-    DragForceGenerator df = DragForceGenerator(0,0); //setted to zero(0); kinetic friction
-    /*r->particles[0] = &particle1;
-    r->particles[1] = &particle2;
-    r->length = 100;
-    pWorld.Links.push_back(r);*/
-
+    Utils::offset = MyVector(0, 500);
+    DragForceGenerator df = DragForceGenerator(0, 0); //setted to zero(0); kinetic friction
+    //storage of the particles and shapes object
     vector <MyParticle*> particleList;
     vector <sf::CircleShape*> shapeList;
 
-    /*
-    * //for particles
-    particle1.velocity = MyVector(-10, 0);
-    particle2.velocity = MyVector(10, 0);
-    particle1.dampening = 1;
-    particle2.dampening = 1;
+    //rotation lesson
+    //bearing
+    MyParticle* originPoint = new MyParticle(50.0f, MyVector(500, 260), MyVector(0, 0), MyVector(0, 0), 100, true);
+    originPoint->dampening = 1;
+    originPoint->restitution = 0.6;
+    originPoint->radius = 20;
+    particleList.push_back(originPoint);
+    pWorld.addParticle(originPoint);
 
-    ParticleContact contact = ParticleContact();
-    contact.particles[0] = &particle1;
-    contact.particles[1] = &particle2;
-    contact.collisionNormal = particle1.position - particle2.position;
-    contact.collisionNormal.Normalize();
-    contact.restitution = 1;
+    //originPoint->AddForce(MyVector(200000, 200000));
 
-    //for wall
-    particle1.velocity = MyVector(-50, 0);
-    contact.particles[1] = NULL;
-    contact.collisionNormal = MyVector(1,0); //bounce back to the right
-    */
+    //weights
+    MyParticle* referencePoint1 = new MyParticle(0.10f, MyVector(500, 360), MyVector(0, 0), MyVector(0, 0), 100, false);
 
-    /*float lifeSpan;
-        lifeSpan = RandomFloat(100.0f, 100.0f); //randomLifeSpan value*/
-    /*CableSpring aSpring1 = CableSpring(MyVector(200, 400), 5, 0.5);
-    CableSpring aSpring2 = CableSpring(MyVector(260, 400), 5, 0.5);
-    CableSpring aSpring3 = CableSpring(MyVector(320, 400), 5, 0.5);
-    CableSpring aSpring4 = CableSpring(MyVector(380, 400), 5, 0.5);
-    CableSpring aSpring5 = CableSpring(MyVector(440, 400), 5, 0.5);*/
-    
-    /*BungeeSpring bSpring1 = BungeeSpring(MyVector(100, 200), 10.0f, 5.0f);
-    BungeeSpring bSpring2 = BungeeSpring(MyVector(200, 200), 10.0f, 5.0f);*/
+    //adds Force to the top-weight
+    referencePoint1->AddForce(MyVector(20000, 0));
 
-    //for rods connections
-    Cable r1 = Cable();
-    Cable r2 = Cable();
-    Cable r3 = Cable();
-    Cable r4 = Cable();
-    Cable r5 = Cable();
+    referencePoint1->dampening = 0.8;
+    referencePoint1->restitution = 0.6;
+    referencePoint1->radius = 15;
+    particleList.push_back(referencePoint1);
+    pWorld.addParticle(referencePoint1);
 
-    //for anchors
-    MyParticle* anchor1 = new MyParticle(1.0f, MyVector(200, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
-    pWorld.addParticle(anchor1);
-    /*sf::CircleShape* anchorS1 = new sf::CircleShape(anchor1->radius);
-    anchorS1->setFillColor(sf::Color::Red);
-    anchorS1->setOrigin(anchorS1->getRadius(), anchorS1->getRadius());
-    RenderParticle* anchorRp1 = new RenderParticle(anchor1, anchorS1);*/
-    //RenderParticles.push_back(anchorRp1);
+    MyParticle* referencePoint2 = new MyParticle(0.10f, MyVector(500, 160), MyVector(0, 0), MyVector(0, 0), 100, false);
+    referencePoint2->dampening = 0.8;
+    referencePoint2->restitution = 0.6;
+    referencePoint2->radius = 15;
+    particleList.push_back(referencePoint2);
+    pWorld.addParticle(referencePoint2);
 
-    MyParticle* anchor2 = new MyParticle(1.0f, MyVector(260, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
-    pWorld.addParticle(anchor2);
-   /* sf::CircleShape* anchorS2 = new sf::CircleShape(anchor2->radius);
-    anchorS2->setFillColor(sf::Color::Red);
-    anchorS2->setOrigin(anchorS2->getRadius(), anchorS2->getRadius());
-    RenderParticle* anchorRp2 = new RenderParticle(anchor2, anchorS2);*/
-    //RenderParticles.push_back(anchorRp2);
+    MyParticle* referencePoint3 = new MyParticle(0.10f, MyVector(600, 260), MyVector(0, 0), MyVector(0, 0), 100, false);
+    referencePoint3->dampening = 0.8;
+    referencePoint3->restitution = 0.6;
+    referencePoint3->radius = 15;
+    particleList.push_back(referencePoint3);
+    pWorld.addParticle(referencePoint3);
 
-    MyParticle* anchor3 = new MyParticle(1.0f, MyVector(320, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
-    pWorld.addParticle(anchor3);
-    /*sf::CircleShape* anchorS3 = new sf::CircleShape(anchor3->radius);
-    anchorS3->setFillColor(sf::Color::Red);
-    anchorS3->setOrigin(anchorS3->getRadius(), anchorS3->getRadius());
-    RenderParticle* anchorRp3 = new RenderParticle(anchor3, anchorS3);*/
-    //RenderParticles.push_back(anchorRp3);
+    MyParticle* referencePoint4 = new MyParticle(0.10f, MyVector(400, 260), MyVector(0, 0), MyVector(0, 0), 100, false);
+    referencePoint4->dampening = 0.8;
+    referencePoint4->restitution = 0.6;
+    referencePoint4->radius = 15;
+    particleList.push_back(referencePoint4);
+    pWorld.addParticle(referencePoint4);
 
-    MyParticle* anchor4 = new MyParticle(1.0f, MyVector(380, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
-    pWorld.addParticle(anchor4);
-    /*sf::CircleShape* anchorS4 = new sf::CircleShape(anchor4->radius);
-    anchorS4->setFillColor(sf::Color::Red);
-    anchorS4->setOrigin(anchorS4->getRadius(), anchorS4->getRadius());
-    RenderParticle* anchorRp4 = new RenderParticle(anchor4, anchorS4);*/
-    //RenderParticles.push_back(anchorRp4);
+    //links
+    Rod* r5 = new Rod();
+    r5->particles[0] = referencePoint1;
+    r5->particles[1] = referencePoint3;
+    r5->length = referencePoint1->position.getMagnitude(referencePoint3->position);
+    pWorld.Links.push_back(r5);
 
-    MyParticle* anchor5 = new MyParticle(1.0f, MyVector(440, 200), MyVector(0, 0), MyVector(0, 0), 100, true);
-    pWorld.addParticle(anchor5);
-    /*sf::CircleShape* anchorS5 = new sf::CircleShape(anchor5->radius);
-    anchorS5->setFillColor(sf::Color::Red);
-    anchorS5->setOrigin(anchorS5->getRadius(), anchorS5->getRadius());
-    RenderParticle* anchorRp5 = new RenderParticle(anchor5, anchorS5);*/
-    //RenderParticles.push_back(anchorRp5);
+    Rod* r6 = new Rod();
+    r6->particles[0] = referencePoint3;
+    r6->particles[1] = referencePoint2;
+    r6->length = referencePoint3->position.getMagnitude(referencePoint2->position);
+    pWorld.Links.push_back(r6);
 
-    //for the balls
-    instantiateParticles(RenderParticles, pWorld, 25.0f, MyVector(200, 400),
-        MyVector(-50, 0), MyVector(0, 0), 100, df, particleList, shapeList);
-    instantiateParticles(RenderParticles, pWorld, 25.0f, MyVector(260, 400),
-        MyVector(-50, 0), MyVector(0, 0), 100, df, particleList, shapeList);
-    instantiateParticles(RenderParticles, pWorld, 25.0f, MyVector(320, 400),
-        MyVector(-50, 0), MyVector(0, 0), 100, df, particleList, shapeList);
-    instantiateParticles(RenderParticles, pWorld, 25.0f, MyVector(380, 400),
-        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList);
-    instantiateParticles(RenderParticles, pWorld, 25.0f, MyVector(440, 400),
-        MyVector(0, 0), MyVector(0, 0), 100, df, particleList, shapeList);
+    Rod* r7 = new Rod();
+    r7->particles[0] = referencePoint1;
+    r7->particles[1] = referencePoint4;
+    r7->length = referencePoint1->position.getMagnitude(referencePoint4->position);
+    pWorld.Links.push_back(r7);
+     
+    /*Rod* r8 = new Rod();
+    r8->particles[0] = referencePoint4;
+    r8->particles[1] = referencePoint1;
+    r8->length = referencePoint4->position.getMagnitude(referencePoint1->position);
+    pWorld.Links.push_back(r8);*/
 
-    //anchor and balls connections
-    r1.particles[0] = anchor1;
-    r1.particles[1] = particleList[0];
-    r2.particles[0] = anchor2;
-    r2.particles[1] = particleList[1];
-    r3.particles[0] = anchor3;
-    r3.particles[1] = particleList[2];
-    r4.particles[0] = anchor4;
-    r4.particles[1] = particleList[3];
-    r5.particles[0] = anchor5;
-    r5.particles[1] = particleList[4];
+    Rod* r1 = new Rod();
+    r1->particles[0] = originPoint;
+    r1->particles[1] = referencePoint1;
+    r1->length = originPoint->position.getMagnitude(referencePoint1->position);
+    pWorld.Links.push_back(r1);
 
-    //sets the settings for rods; problem here; last element of Links doesn't trigger the length limit
-    r1.length = 200;
-    pWorld.Links.push_back(&r1);
-    r2.length = 200;
-    pWorld.Links.push_back(&r2);
-    r3.length = 200;
-    pWorld.Links.push_back(&r3);
-    r4.length = 200;
-    pWorld.Links.push_back(&r4);
-    r5.length = 200;
-    pWorld.Links.push_back(&r5);
-    r5.length = 200;
+    Rod* r3 = new Rod();
+    r3->particles[0] = originPoint;
+    r3->particles[1] = referencePoint3;
+    r3->length = 100;
+    pWorld.Links.push_back(r3);
 
-    //line/cable representation
-    sf::VertexArray line1(sf::Lines, 2);
-    line1[0].position = sf::Vector2f(200, 200);
-    line1[0].color = sf::Color::White;
+    Rod* r2 = new Rod();
+    r2->particles[0] = originPoint;
+    r2->particles[1] = referencePoint2;
+    r2->length = 100;
+    pWorld.Links.push_back(r2);
 
-    sf::VertexArray line2(sf::Lines, 2);
-    line2[0].position = sf::Vector2f(260, 200);
-    line2[0].color = sf::Color::White;
+    Rod* r4 = new Rod();
+    r4->particles[0] = originPoint;
+    r4->particles[1] = referencePoint4;
+    r4->length = 100;
+    pWorld.Links.push_back(r4);
 
-    sf::VertexArray line3(sf::Lines, 2);
-    line3[0].position = sf::Vector2f(320, 200);
-    line3[0].color = sf::Color::White;
+    //texture
+    sf::Texture t;
+    if (!t.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
 
-    sf::VertexArray line4(sf::Lines, 2);
-    line4[0].position = sf::Vector2f(380, 200);
-    line4[0].color = sf::Color::White;
+    sf::Sprite shuriken;
+    shuriken.setTexture(t);
+    shuriken.setOrigin(t.getSize().x / 2, t.getSize().y / 2);
+    MyVector shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
 
-    sf::VertexArray line5(sf::Lines, 2);
-    line5[0].position = sf::Vector2f(440, 200);
-    line5[0].color = sf::Color::White;
+    /*MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
+    MyVector weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
+    MyVector weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
+    MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);*/
 
-    /*contact.collisionNormal = contact.particles[0]->position - contact.particles[1]->position;
-    contact.collisionNormal.Normalize();
-    contact.restitution = 0.6f;*/
+    //base shape
+    sf::CircleShape shape(originPoint->radius);
+    shape.setFillColor(sf::Color::White);
+    shape.setOrigin(shape.getRadius(), shape.getRadius());
+    shapeList.push_back(&shape);
 
-    /*MyVector dir = particleList[0]->position - particleList[1]->position;
-    dir.Normalize();*/
+    RenderParticle rP1 = RenderParticle(originPoint, &shape);
+    RenderParticles.push_back(&rP1);
 
-    //pWorld.AddContact(particleList[0], particleList[1], 1, dir, );
+    //weightShapes
+    sf::CircleShape wShape1(referencePoint1->radius);
+    wShape1.setFillColor(sf::Color::Blue);
+    wShape1.setOrigin(wShape1.getRadius(), wShape1.getRadius());
+    shapeList.push_back(&wShape1);
+    RenderParticle rP2 = RenderParticle(referencePoint1, &wShape1);
+    RenderParticles.push_back(&rP2);
 
-    //realistic spring between two balls
-    /*ParticleSpring* pS1 = new ParticleSpring(particleList[0], 5, 1);
-    pWorld.forceRegistry.Add(particleList[1], pS1);    //adds the ParticleSpring; this should be a connection to another particle
-    ParticleSpring* pS2 = new ParticleSpring(particleList[1], 5, 1);
-    pWorld.forceRegistry.Add(particleList[0], pS2);    //adds the ParticleSpring; this should be a connection to another particle*/
+    sf::CircleShape wShape2(referencePoint2->radius);
+    wShape2.setFillColor(sf::Color::Blue);
+    wShape2.setOrigin(wShape2.getRadius(), wShape2.getRadius());
+    shapeList.push_back(&wShape2);
+    RenderParticle rP3 = RenderParticle(referencePoint2, &wShape2);
+    RenderParticles.push_back(&rP3);
 
-    //pWorld.forceRegistry.Add(myP, &df);    //adds the friction
-    /*pWorld.forceRegistry.Add(particleList[0], &aSpring1);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[1], &aSpring2);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[2], &aSpring3);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[3], &aSpring4);    //adds the spring
-    pWorld.forceRegistry.Add(particleList[4], &aSpring5);    //adds the spring*/
+    sf::CircleShape wShape3(referencePoint3->radius);
+    wShape3.setFillColor(sf::Color::Blue);
+    wShape3.setOrigin(wShape3.getRadius(), wShape3.getRadius());
+    shapeList.push_back(&wShape3);
+    RenderParticle rP4 = RenderParticle(referencePoint3, &wShape3);
+    RenderParticles.push_back(&rP4);
 
-    //pWorld.forceRegistry.Add(particleList[0], &bSpring1);    //adds the spring
-    //pWorld.forceRegistry.Add(particleList[1], &bSpring2);    //adds the spring
-    //pWorld.forceRegistry.Add(myP, &bSpring);    //adds the spring
+    sf::CircleShape wShape4(referencePoint4->radius);
+    wShape4.setFillColor(sf::Color::Blue);
+    wShape4.setOrigin(wShape4.getRadius(), wShape4.getRadius());
+    shapeList.push_back(&wShape4);
+    RenderParticle rP5 = RenderParticle(referencePoint4, &wShape4);
+    RenderParticles.push_back(&rP5);
 
+    MyVector renderPoint = originPoint->GetRenderPoint();
+    shape.setPosition(renderPoint.x, renderPoint.y);
+
+    renderPoint = referencePoint1->GetRenderPoint();
+    wShape1.setPosition(renderPoint.x, renderPoint.y);
+    //end of rotation lesson
+
+    pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
+    pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction
+
+    //custom variables
+    int standing = 0;
 
     //clock/frame 
     using clock = high_resolution_clock;
@@ -229,6 +219,14 @@ int main() {
     int particleLimitSize = 25;
 
     sf::Event event;
+
+    MyVector startingPos = referencePoint1->position;
+    float timer = 0.0f;
+    bool stopTimer = false;
+    float revolution = 0.0f;
+    bool once = true;
+    float startingRad = 0.0f;
+    int tempDeg;
 
     while (1) {
         curr_time = clock::now();
@@ -244,17 +242,15 @@ int main() {
             //ms is in milisecs while engine is using secs so we divide by 1000
             //(float)ms.count() / 1000
 
-
-            //Updates the shapes and particles
+            //Rotation lesson
+            //MyVector prevPos = referencePoint1->position - originPoint->position;
             pWorld.Update((float)ms.count() / 1000);
-            line1[1].position = sf::Vector2f(particleList[0]->position.x, particleList[0]->position.y);
-            line2[1].position = sf::Vector2f(particleList[1]->position.x, particleList[1]->position.y);
-            line3[1].position = sf::Vector2f(particleList[2]->position.x, particleList[2]->position.y);
-            line4[1].position = sf::Vector2f(particleList[3]->position.x, particleList[3]->position.y);
-            line5[1].position = sf::Vector2f(particleList[4]->position.x, particleList[4]->position.y);
-            //contact.Resolve((float)ms.count() / 1000); //Contact ResolutionTesting
-            /*cout << "V of a: " << particleList[0]->position.x << "," << particleList[0]->position.y << endl;
-            cout << "V of b: " << particleList[1]->position.x << "," << particleList[1]->position.y << endl;*/
+            //MyVector currPos = referencePoint1->position - originPoint->position;
+            //end of Rotation lesson
+
+            //
+            if(!stopTimer)
+                timer += (float)ms.count() / 1000;
 
             curr_ns -= timestep;
 
@@ -267,23 +263,52 @@ int main() {
                     break;
                 }
             }
-            std::cout << "1. " << particleList[0]->position.y - anchor1->position.y << endl;
-            std::cout << "2. " << particleList[1]->position.y - anchor2->position.y << endl;
-            std::cout << "3. " << particleList[2]->position.y - anchor3->position.y << endl;
-            std::cout << "4. " << particleList[3]->position.y - anchor4->position.y << endl;
-            std::cout << "5. " << particleList[4]->position.y - anchor5->position.y << endl;
+
             window.clear();
+            //Rotation lesson
+            shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
+            shuriken.setPosition(shurikenPos.x, shurikenPos.y);
+
+            /*float p1 = (prevPos * currPos);
+            float p2 = (originPoint->position - referencePoint1->position).SquareMagnitude();
+            float rad_Angle = acosf(p1 / p2);
+            float deg = rad_Angle * (180 / acosf(-1.0));
+            cout << "p1: " << p1 << endl;
+            cout << "p2: " << p2 << endl;
+            cout << "rad_Angle: " << deg << endl;
+            cout << "Degrees: " << deg << endl;
+            if(deg >= 0)
+            shuriken.rotate(-deg);*/
+
+            float rad_Angle = atan2f(referencePoint1->position.y - originPoint->position.y, referencePoint1->position.x - originPoint->position.x);
+            float deg = rad_Angle * (180 / acos(-1.0));
+            tempDeg = (int)deg;
+            if ((int)startingRad == tempDeg)
+            {
+                revolution++;
+            }
+            if (once)
+            {
+                startingRad = tempDeg;
+                once = !once;
+            }
+            if (referencePoint1->velocity.x <= 10 && referencePoint2->velocity.x <= 10 && referencePoint3->velocity.x <= 10 && referencePoint4->velocity.x <= 10 && !stopTimer)
+            {
+                revolution += (((180.0f - deg) / 90.0f) * 0.25f) + 0.75f;
+                cout << "Spinner has completed: " << revolution << " revolutions" << endl;
+                cout << "Spinner took " << timer << " secs to reach minimum speed" << endl;
+                stopTimer = true;
+            }
+            shuriken.setRotation(-deg);
+
+            window.draw(shuriken);
+            //end of Rotation lesson
             //iterates the particles then draw
             for (std::list<RenderParticle*>::iterator i = RenderParticles.begin();
                 i != RenderParticles.end(); i++)
             {
                 (*i)->Draw(&window);
             }
-            window.draw(line1);
-            window.draw(line2);
-            window.draw(line3);
-            window.draw(line4);
-            window.draw(line5);
             window.display();
         }
     }
@@ -300,14 +325,6 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     //add particle to the PhysicWorld
     pWorld.addParticle(myP);
     sf::CircleShape* myS = new sf::CircleShape(myP->radius);
-    /*sf::CircleShape* myS = new sf::CircleShape(myP->radius);*/
-
-    //random addForce
-    /*float randomX;
-    randomX = RandomFloat(-0.3f, 0.3f);
-    float randomForce;
-    randomForce = RandomFloat(9000.0f, 16000.0f);
-    myP->AddForce(MyVector(0, -1 * randomForce));*/
 
     static int particleIndex = 0;
 
@@ -319,16 +336,7 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     particleList.push_back(myP);
     shapeList.push_back(myS);
 
-    /*//for particles
-    myP->dampening = 1;*/
-
     particleIndex++;
-    /*
-    //for wall
-    particle1.velocity = MyVector(-50, 0);
-    contact.particles[1] = NULL;
-    contact.collisionNormal = MyVector(1,0); //bounce back to the right
-    */
 }
 
 //returns a random float between the two float values
