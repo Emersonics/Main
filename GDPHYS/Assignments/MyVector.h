@@ -26,7 +26,7 @@ using namespace std;
 		void operator*=(const float scalar); //this is for scalar multiple
 		float operator*(const MyVector v);
 		MyVector ComponentProduct(const MyVector v); //this is for ComponentProduct
-		float getScalarProduct(MyVector vec1, MyVector vec2); //this is for ScalarProduct
+		static float getScalarProduct(MyVector vec1, MyVector vec2); //this is for ScalarProduct
 		MyVector getVectorProduct(MyVector vec1, MyVector vec2); //this is for VectorProduct
 		void Normalize(); //this is for VectorProduct
 		float SquareMagnitude();

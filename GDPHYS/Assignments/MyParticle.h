@@ -30,7 +30,7 @@ public:
 	void Destroy();
 	void checkLifeSpan(float time);
 public:
-	float dampening = 1.0f;
+	float dampening = 0.9f;
 	void AddForce(MyVector v);
 	void ResetForce();
 protected:
@@ -39,6 +39,17 @@ public:
 	float radius = 25;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
 	float restitution = 1;
+//Torque
+public:
+	float angularDampening = 0.9;
+	float angularVelocity = 0;
+
+	float rotation = 0; //Radians
+public:
+	float GetMomentOfInertia();
+	void AddForceOnPoint(MyVector locPoint, MyVector force);
+protected:
+	float accumulatedTorque = 0;
 private:
 	bool stationary;
 	MyVector startPos;

@@ -45,13 +45,43 @@ int main() {
     //PhysicsWorld, Renderparticle, and Utils instance
     PhysicsWorld pWorld = PhysicsWorld();
     std::list<RenderParticle*> RenderParticles;
-    Utils::offset = MyVector(0, 500);
+    Utils::offset = MyVector(0, 250);
     DragForceGenerator df = DragForceGenerator(0, 0); //setted to zero(0); kinetic friction
     //storage of the particles and shapes object
     vector <MyParticle*> particleList;
     vector <sf::CircleShape*> shapeList;
 
-    //rotation lesson
+    //week 15 lesson
+    MyParticle* originParticle = new MyParticle(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
+    originParticle->dampening = 1;
+    originParticle->restitution = 0.6;
+    originParticle->radius = 20;
+    particleList.push_back(originParticle);
+    pWorld.addParticle(originParticle);
+
+    sf::CircleShape originShape(originParticle->radius);
+    originShape.setFillColor(sf::Color::White);
+    originShape.setOrigin(originShape.getRadius(), originShape.getRadius());
+    shapeList.push_back(&originShape);
+
+    RenderParticle c_rp = RenderParticle(originParticle, &originShape);
+    RenderParticles.push_back(&c_rp);
+
+    originParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+
+    //texture
+    sf::Texture tt;
+    if (!tt.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
+
+    sf::Sprite sampleShuriken;
+    sampleShuriken.setTexture(tt);
+    MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    sf::Vector2u s = sampleShuriken.getTexture()->getSize();
+    sampleShuriken.setOrigin(s.x / 2, s.y / 2);
+    sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
+
+
+    /*//rotation lesson
     //bearing
     MyParticle* originPoint = new MyParticle(50.0f, MyVector(500, 260), MyVector(0, 0), MyVector(0, 0), 100, true);
     originPoint->dampening = 1;
@@ -112,14 +142,14 @@ int main() {
     r7->particles[0] = referencePoint1;
     r7->particles[1] = referencePoint4;
     r7->length = referencePoint1->position.getMagnitude(referencePoint4->position);
-    pWorld.Links.push_back(r7);
+    pWorld.Links.push_back(r7);*/
      
     /*Rod* r8 = new Rod();
     r8->particles[0] = referencePoint4;
     r8->particles[1] = referencePoint1;
     r8->length = referencePoint4->position.getMagnitude(referencePoint1->position);
     pWorld.Links.push_back(r8);*/
-
+/*
     Rod* r1 = new Rod();
     r1->particles[0] = originPoint;
     r1->particles[1] = referencePoint1;
@@ -153,10 +183,10 @@ int main() {
     shuriken.setOrigin(t.getSize().x / 2, t.getSize().y / 2);
     MyVector shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
 
-    /*MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
+    MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
     MyVector weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
     MyVector weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
-    MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);*/
+    MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);
 
     //base shape
     sf::CircleShape shape(originPoint->radius);
@@ -201,10 +231,10 @@ int main() {
 
     renderPoint = referencePoint1->GetRenderPoint();
     wShape1.setPosition(renderPoint.x, renderPoint.y);
-    //end of rotation lesson
+    //end of rotation lesson*/
 
-    pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
-    pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction
+    /*pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
+    pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction*/
 
     //custom variables
     int standing = 0;
@@ -220,7 +250,7 @@ int main() {
 
     sf::Event event;
 
-    MyVector startingPos = referencePoint1->position;
+    //MyVector startingPos = referencePoint1->position;
     float timer = 0.0f;
     bool stopTimer = false;
     float revolution = 0.0f;
@@ -254,6 +284,11 @@ int main() {
 
             curr_ns -= timestep;
 
+            //week 15
+            sampleShurikenPos = Utils::P6ToSFMLPoint(originParticle->position);
+            sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
+            sampleShuriken.setRotation(originParticle->rotation * (180/acos(-1.0f)));
+
             while (window.pollEvent(event))
             {
                 switch (event.type)
@@ -265,9 +300,14 @@ int main() {
             }
 
             window.clear();
-            //Rotation lesson
+            /*//Rotation lesson
             shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
-            shuriken.setPosition(shurikenPos.x, shurikenPos.y);
+            weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
+            weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
+            weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
+            weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);
+
+            shuriken.setPosition(shurikenPos.x, shurikenPos.y);*/
 
             /*float p1 = (prevPos * currPos);
             float p2 = (originPoint->position - referencePoint1->position).SquareMagnitude();
@@ -280,7 +320,7 @@ int main() {
             if(deg >= 0)
             shuriken.rotate(-deg);*/
 
-            float rad_Angle = atan2f(referencePoint1->position.y - originPoint->position.y, referencePoint1->position.x - originPoint->position.x);
+            /*float rad_Angle = atan2f(referencePoint1->position.y - originPoint->position.y, referencePoint1->position.x - originPoint->position.x);
             float deg = rad_Angle * (180 / acos(-1.0));
             tempDeg = (int)deg;
             if ((int)startingRad == tempDeg)
@@ -299,9 +339,10 @@ int main() {
                 cout << "Spinner took " << timer << " secs to reach minimum speed" << endl;
                 stopTimer = true;
             }
-            shuriken.setRotation(-deg);
+            shuriken.setRotation(-deg);*/
 
-            window.draw(shuriken);
+            //window.draw(shuriken);
+            window.draw(sampleShuriken);
             //end of Rotation lesson
             //iterates the particles then draw
             for (std::list<RenderParticle*>::iterator i = RenderParticles.begin();

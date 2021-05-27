@@ -42,14 +42,20 @@ void MyParticle::checkLifeSpan(float time)
 void MyParticle::updateVelocity(float time)
 {
 	acceleration = acceleration + accumulatedForce * (1 / mass);
+	
 	velocity = velocity + acceleration * time;
 	velocity = velocity * powf(dampening, time);
+
+	float MoI = GetMomentOfInertia();
+	angularVelocity += accumulatedTorque * ((float)1 / MoI) * time;
+	angularVelocity = angularVelocity * powf(angularDampening, time);
 }
 
 void MyParticle::updatePosition(float time)
 {
 	//P2
 	position = position + (velocity * time) + ((acceleration * powf(time, 2)) * (1 / 2));
+	rotation = rotation + (angularVelocity * time);
 }
 
 MyVector MyParticle::GetRenderPoint()
@@ -71,5 +77,17 @@ void MyParticle::AddForce(MyVector v)
 void MyParticle::ResetForce()
 {
 	accumulatedForce = MyVector(0, 0);
+	accumulatedTorque = 0;
 	acceleration = MyVector(0, 0);
+}
+
+float MyParticle::GetMomentOfInertia()
+{
+	return((float)2 / 5 * mass * radius * radius);
+}
+
+void MyParticle::AddForceOnPoint(MyVector locPoint, MyVector f)
+{
+	accumulatedForce += f;
+	accumulatedTorque += MyVector::getScalarProduct(locPoint, f);
 }
