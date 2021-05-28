@@ -13,7 +13,7 @@ public: //consrtuctor
 	MyParticle();
 public:
 	float mass;
-	float lifeSpan;
+	float lifeSpan = 100.0f;
 	MyVector position;
 	MyVector velocity;
 	MyVector acceleration;
@@ -51,7 +51,7 @@ public:
 protected:
 	float accumulatedTorque = 0;
 private:
-	bool stationary;
+	bool stationary = false;
 	MyVector startPos;
 	void stationarySetting();
 public:

@@ -2,6 +2,7 @@
 
 void RenderParticle::Draw(sf::RenderWindow* window)
 {
+	cout << "Hello World" << endl;
 	if (!PhysicParticle->IsDestroyed())
 	{
 		MyVector v = PhysicParticle->GetRenderPoint();

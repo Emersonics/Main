@@ -60,14 +60,22 @@ int main() {
     //week 15 lesson
     //RectPrismRb* originParticle = new RectPrismRb(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
     RectPrismRb* rectParticle = new RectPrismRb();
+    //position of shape
+    rectParticle->position = MyVector(100, 0);
+    //velocity of shape
+    rectParticle->velocity = MyVector(0, 0);
+    //acceleration of shape
+    rectParticle->acceleration = MyVector(0, 0);
     rectParticle->dampening = 1;
+    rectParticle->lifeSpan = 100.0f;
+    rectParticle->mass = 5.0;
     rectParticle->w = 5;
     rectParticle->h = 3; 
     rectParticle->initializeRb((int)particleType::Rect);
     rectParticle->dampening = 1;
     rectParticle->restitution = 0.6;
-    //particleList.push_back(rectParticle);
-    pWorld.addParticle(rectParticle);
+    particleList.push_back((MyParticle*)rectParticle);
+    pWorld.addParticle((MyParticle*)rectParticle);
 
     sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
     rectShape.setFillColor(sf::Color::White);
@@ -82,7 +90,6 @@ int main() {
 
     rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
-    cout << "Hello World" << endl;
 
     /*//texture
     sf::Texture tt;
