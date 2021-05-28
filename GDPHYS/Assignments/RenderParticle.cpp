@@ -6,11 +6,26 @@ void RenderParticle::Draw(sf::RenderWindow* window)
 	if (!PhysicParticle->IsDestroyed())
 	{
 		MyVector v = PhysicParticle->GetRenderPoint();
-		ParticleShape->setPosition(v.x, v.y);
+		MyVector c = CircParticle->GetRenderPoint();
+		MyVector r = RectParticle->GetRenderPoint();
+		switch (particleType)
+		{
+		case 0:
+			ParticleShape->setPosition(v.x, v.y);
+			break;
+		case 2:
+			circleShape->setPosition(c.x, c.y);
+			break;
+		case 3:
+			rectShape->setPosition(r.x, r.y);
+			break;
+		}
+
+		/*MyVector v = PhysicParticle->GetRenderPoint();
+		ParticleShape->setPosition(v.x, v.y);*/
 
 		//draw the shape
 		//0 = Particle 1 = Rigid 2 = Circ 3 = Rect
-		window->draw(*ParticleShape);
 		switch (particleType)
 		{
 		case 0:
