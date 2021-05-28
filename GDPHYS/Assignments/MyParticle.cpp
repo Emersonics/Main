@@ -47,7 +47,7 @@ void MyParticle::updateVelocity(float time)
 	velocity = velocity * powf(dampening, time);
 
 	float MoI = GetMomentOfInertia();
-	angularVelocity += accumulatedTorque * ((float)1 / MoI) * time;
+	angularVelocity += -accumulatedTorque * ((float)1 / MoI) * time;
 	angularVelocity = angularVelocity * powf(angularDampening, time);
 }
 
