@@ -40,6 +40,8 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList);
 float RandomFloat(float a, float b);
 
+//0 = Particle 1 = Rigid 2 = Circ 3 = Rect
+enum particleType {Particle = 0, Rigid, Circ, Rect};
 
 int main() {
     srand(time(NULL));
@@ -53,27 +55,36 @@ int main() {
     //storage of the particles and shapes object
     vector <MyParticle*> particleList;
     vector <sf::CircleShape*> shapeList;
+    vector <sf::RectangleShape*> rectList;
 
     //week 15 lesson
-    MyParticle* originParticle = new MyParticle(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
-    MyParticle* originParticle = new MyParticle(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
-    originParticle->dampening = 1;
-    originParticle->restitution = 0.6;
-    originParticle->radius = 20;
-    particleList.push_back(originParticle);
-    pWorld.addParticle(originParticle);
+    //RectPrismRb* originParticle = new RectPrismRb(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
+    RectPrismRb* rectParticle = new RectPrismRb();
+    rectParticle->dampening = 1;
+    rectParticle->w = 5;
+    rectParticle->h = 3; 
+    rectParticle->initializeRb((int)particleType::Rect);
+    rectParticle->dampening = 1;
+    rectParticle->restitution = 0.6;
+    //particleList.push_back(rectParticle);
+    pWorld.addParticle(rectParticle);
 
-    sf::CircleShape originShape(originParticle->radius);
-    originShape.setFillColor(sf::Color::White);
-    originShape.setOrigin(originShape.getRadius(), originShape.getRadius());
-    shapeList.push_back(&originShape);
+    sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
+    rectShape.setFillColor(sf::Color::White);
+    rectParticle->position = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    rectShape.setOrigin(rectParticle->w / 2, rectParticle->h / 2);
+    rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
+    rectList.push_back(&rectShape);
 
-    RenderParticle c_rp = RenderParticle(originParticle, &originShape);
+
+    RenderParticle c_rp = RenderParticle(rectParticle, &rectShape);
     RenderParticles.push_back(&c_rp);
 
-    originParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
-    //texture
+    cout << "Hello World" << endl;
+
+    /*//texture
     sf::Texture tt;
     if (!tt.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
 
@@ -83,7 +94,7 @@ int main() {
     sf::Vector2u s = sampleShuriken.getTexture()->getSize();
     sampleShuriken.setOrigin(s.x / 2, s.y / 2);
     sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
-
+    */
 
     /*//rotation lesson
     //bearing
@@ -289,9 +300,9 @@ int main() {
             curr_ns -= timestep;
 
             //week 15
-            sampleShurikenPos = Utils::P6ToSFMLPoint(originParticle->position);
-            sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
-            sampleShuriken.setRotation(originParticle->rotation * (180/acos(-1.0f)));
+            rectParticle->position = Utils::P6ToSFMLPoint(rectParticle->position);
+            rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
+            rectShape.setRotation(rectParticle->rotation * (180/acos(-1.0f)));
 
             while (window.pollEvent(event))
             {
@@ -346,7 +357,7 @@ int main() {
             shuriken.setRotation(-deg);*/
 
             //window.draw(shuriken);
-            window.draw(sampleShuriken);
+            //window.draw(sampleShuriken);
             //end of Rotation lesson
             //iterates the particles then draw
             for (std::list<RenderParticle*>::iterator i = RenderParticles.begin();

@@ -36,7 +36,7 @@ public:
 protected:
 	MyVector accumulatedForce = MyVector(0,0,0);
 public:
-	float radius = 25;
+	float radius = 0;
 	//elasticity/restitution 1-being so elastic and 0 - no elasticity(bounciness)
 	float restitution = 1;
 //Torque
@@ -55,7 +55,9 @@ private:
 	MyVector startPos;
 	void stationarySetting();
 public:
+	int particleType = 0; //0 = Particle 1 = Rigid 2 = Circ 3 = Rect
 	int GetType();
+	virtual void initializeRb(int particleType);
 };
 
 #endif //MYPARTICLE

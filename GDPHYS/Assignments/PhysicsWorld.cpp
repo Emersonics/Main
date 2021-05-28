@@ -124,7 +124,7 @@ void PhysicsWorld::GenerateRigidbodyContacts(MyParticle* a, MyParticle* b)
 	else if(a->GetType() == 3 && b->GetType() == 3)
 	{
 		RectPrismRb* rect1 = dynamic_cast<RectPrismRb*>(a);
-		RectPrismRb* rect2 = dynamic_cast<RectPrismRb*>(a);
+		RectPrismRb* rect2 = dynamic_cast<RectPrismRb*>(b);
 
 		GetContact(rect1, rect2);
 	}

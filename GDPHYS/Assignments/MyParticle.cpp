@@ -1,5 +1,6 @@
 #include "MyParticle.h"
 
+
 MyParticle::MyParticle(float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, bool stationary) :
 	mass(mass), position(position), velocity(velocity), acceleration(acceleration), lifeSpan(lifeSpan), stationary(stationary), startPos(position)
 {
@@ -86,14 +87,20 @@ float MyParticle::GetMomentOfInertia()
 	return((float)2 / 5 * mass * radius * radius);
 }
 
+//should only be use in RBs objects
 void MyParticle::AddForceOnPoint(MyVector locPoint, MyVector f)
 {
 	accumulatedForce += f;
 	accumulatedTorque += MyVector::getScalarProduct(locPoint, f);
 }
 
-
 int MyParticle::GetType()
+{
+	//0 = Particle 1 = Rigid 2 = Circ 3 = Rect
+	return this->particleType;
+}
+
+void MyParticle::initializeRb(int particleType)
 {
 
 }
