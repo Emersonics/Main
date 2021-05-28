@@ -54,6 +54,8 @@ private:
 	bool stationary;
 	MyVector startPos;
 	void stationarySetting();
+public:
+	int GetType();
 };
 
 #endif //MYPARTICLE

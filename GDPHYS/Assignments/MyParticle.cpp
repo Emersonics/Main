@@ -91,3 +91,9 @@ void MyParticle::AddForceOnPoint(MyVector locPoint, MyVector f)
 	accumulatedForce += f;
 	accumulatedTorque += MyVector::getScalarProduct(locPoint, f);
 }
+
+
+int MyParticle::GetType()
+{
+
+}

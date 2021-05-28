@@ -9,6 +9,9 @@
 #include "Links/ParticleLink.h"
 #include <vector>
 
+#include "RigidBodies/CircleRb.h"
+#include "RigidBodies/RectPrismRb.h"
+
 class PhysicsWorld
 {
 public:
@@ -20,7 +23,7 @@ protected:
 	ContactResolver resolver = ContactResolver(20);
 public:
 	std::vector<ParticleContact*> Contacts;
-	void AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal, float depth);
+	void AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal); //, float depth
 public:
 	std::list<MyParticle*> Particles;
 	void addParticle(MyParticle* particle);
@@ -35,6 +38,12 @@ public:
 	ForceRegistry forceRegistry;
 protected:
 	GravityForceGenerator Gravity = GravityForceGenerator(MyVector(0, 0)); //9.8 - negative velocity(downward)
+protected:
+	void GenerateParticleContacts(MyParticle* a, MyParticle* b);
+	void GenerateRigidbodyContacts(MyParticle* a, MyParticle* b);
+	void GetContact(RectPrismRb* a, RectPrismRb* b);
+	void GetContact(RectPrismRb* a, MyParticle* b);
+	void GetContact(MyParticle* a, MyParticle* b);
 };
 
 #endif // !PHYSICSWORLD

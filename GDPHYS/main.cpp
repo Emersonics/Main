@@ -23,6 +23,9 @@
 #include "Assignments/Collision/ContactResolver.h"
 #include "Assignments/Links/Rod.h"
 #include "Assignments/Links/Cable.h"
+#include "Assignments/RigidBodies/RectPrismRb.h"
+#include "Assignments/RigidBodies/CircleRb.h"
+
 #define PI 3.14159265
 
 using namespace std::chrono_literals;
@@ -52,6 +55,7 @@ int main() {
     vector <sf::CircleShape*> shapeList;
 
     //week 15 lesson
+    MyParticle* originParticle = new MyParticle(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
     MyParticle* originParticle = new MyParticle(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
     originParticle->dampening = 1;
     originParticle->restitution = 0.6;

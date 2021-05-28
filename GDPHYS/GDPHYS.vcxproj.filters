@@ -69,6 +69,12 @@
     <ClCompile Include="Assignments\Links\Cable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Assignments\RigidBodies\CircleRb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Assignments\RigidBodies\RectPrismRb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignments\MyParticle.h">
@@ -120,6 +126,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assignments\Links\Cable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assignments\RigidBodies\CircleRb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assignments\RigidBodies\RectPrismRb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

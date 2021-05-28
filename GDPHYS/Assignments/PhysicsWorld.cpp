@@ -1,6 +1,6 @@
 #include "PhysicsWorld.h"
 
-void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal, float depth)
+void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution, MyVector contactNormal) //, float depth)
 {
 	ParticleContact* toAdd = new ParticleContact();
 
@@ -8,7 +8,7 @@ void PhysicsWorld::AddContact(MyParticle* p1, MyParticle* p2, float restitution,
 	toAdd->particles[1] = p2;
 	toAdd->restitution = restitution;
 	toAdd->collisionNormal = contactNormal;
-	toAdd->depth = depth;
+	//toAdd->depth = depth;
 
 	Contacts.push_back(toAdd);
 }
@@ -72,26 +72,198 @@ void PhysicsWorld::GetOverlaps()
 		for (int h = i + 1; h < Particles.size(); h++)
 		{
 			std::list<MyParticle*>::iterator b = std::next(Particles.begin(), h);
-
-			float distSq = ((*a)->position - (*b)->position).SquareMagnitude();
-			float radSumSq = ((*a)->radius + (*b)->radius) * ((*a)->radius + (*b)->radius);
-
-			if (distSq <= radSumSq)
+			//0 = Particle 1 = Rigid 2 = Circ 3 = Rect
+			
+			if((*a)->GetType() == 0 && (*b)->GetType() == 0)
 			{
-				//Collision Normal
-				MyVector dir = ((*a)->position - (*b)->position);
-				dir.Normalize();
+				GenerateParticleContacts(*a, *b);
+			}
+			else{
+				GenerateRigidbodyContacts(*a, *b);
+			}
+			
+		}
+	}
+}
 
-				float r = radSumSq - distSq;
-				float depth = sqrt(r);
-				//1
-				float restitution = (*a)->restitution;
-				//0.5
-				if ((*b)->restitution < restitution)
-					restitution = (*b)->restitution;
+void PhysicsWorld::GenerateParticleContacts(MyParticle* a, MyParticle* b)
+{
+	float distSq = (a->position - b->position).SquareMagnitude();
+	float radSumSq = (a->radius + b->radius) * (a->radius + b->radius);
 
-				AddContact(*a, *b, restitution, dir, depth);
+	if (distSq <= radSumSq)
+	{
+		//Collision Normal
+		MyVector dir = (a->position - b->position);
+		dir.Normalize();
+
+		float r = radSumSq - distSq;
+		float depth = sqrt(r);
+		//1
+		float restitution = a->restitution;
+		//0.5
+		if (b->restitution < restitution)
+			restitution = b->restitution;
+
+		AddContact(a, b, restitution, dir);
+	}
+}
+
+void PhysicsWorld::GenerateRigidbodyContacts(MyParticle* a, MyParticle* b)
+{
+	
+	if(
+	(a->GetType() == 2 && b->GetType() == 2) || 
+	(a->GetType() == 2 && b->GetType() == 0) || 
+	(a->GetType() == 0 && b->GetType() == 2)
+	)
+	{
+		GenerateParticleContacts(a,b);
+	}
+
+	else if(a->GetType() == 3 && b->GetType() == 3)
+	{
+		RectPrismRb* rect1 = dynamic_cast<RectPrismRb*>(a);
+		RectPrismRb* rect2 = dynamic_cast<RectPrismRb*>(a);
+
+		GetContact(rect1, rect2);
+	}
+	
+	else
+	{
+		RectPrismRb* rect = dynamic_cast<RectPrismRb*>(a);
+		if(rect == nullptr)
+		{
+			rect = dynamic_cast<RectPrismRb*>(b);
+			GetContact(rect, a);
+		}
+		else
+		{
+		GetContact(rect, b);
+		}
+	}
+			
+}
+
+void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
+{
+	MyVector relV = b->position - a->position;
+	float invRot = -a->rotation;
+
+	MyVector rotV = Utils::RotatePoint(relV, invRot);
+
+	float minX = rotV.x;
+	if ((a->w / 2) < minX)
+	{
+		minX = a->w / 2;
+	}
+
+	float maxX = minX;
+	if (minX < -(a->w / 2))
+	{
+		maxX = -(a->w / 2);
+	}
+
+	float minY = rotV.y;
+	if ((a->h / 2) < minY)
+	{
+		minY = a->h / 2;
+	}
+
+	float maxY = minY;
+	if (minY < -(a->h / 2))
+	{
+		maxY = -(a->h / 2);
+	}
+
+	float D_X = rotV.x - maxX;
+	float D_Y = rotV.y - maxY;
+
+	bool col = (D_X * D_X + D_Y * D_Y) <= (b->radius * b->radius);
+
+	if (col)
+	{
+		//Collision Normal
+		MyVector dir = relV * -1;
+		dir.Normalize();
+
+		//1
+		float restitution = a->restitution;
+		//0.5
+		if (b->restitution < restitution)
+			restitution = b->restitution;
+
+		AddContact(a, b, restitution, dir);
+	}
+}
+
+void PhysicsWorld::GetContact(RectPrismRb* a, RectPrismRb* b)
+{
+	std::vector<RectPrismRb*> rects;
+	rects.push_back(a);
+	rects.push_back(b);
+
+	bool ret = true;
+	for (int i = 0; i < rects.size(); i++)
+	{
+		for (int e1 = 0; i < rects[i]->points.size(); e1++)
+		{
+			int e2 = (e1 + 1) & rects[i]->points.size();
+
+			MyVector p1 = rects[i]->points[e1];
+			MyVector p2 = rects[i]->points[e2];
+
+			MyVector perpendiculardge = MyVector(p2.y - p1.y, p1.x - p2.x);
+
+			float minA = perpendiculardge * rects[0]->points[0];
+			float maxA = perpendiculardge * rects[0]->points[0];
+			for (int h = 1; h < rects[0]->points.size(); h++)
+			{
+				float temp = perpendiculardge * rects[0]->points[h];
+				if (temp < minA)
+				{
+					minA = temp;
+				}
+				if (temp > maxA)
+				{
+					maxA = temp;
+				}
+			}
+
+			float minB = perpendiculardge * rects[1]->points[0];
+			float maxB = perpendiculardge * rects[1]->points[0];
+			for (int h = 1; h < rects[1]->points.size(); h++)
+			{
+				float temp = perpendiculardge * rects[1]->points[h];
+				if (temp < minB)
+				{
+					minB = temp;
+				}
+				if (temp > maxB)
+				{
+					maxB = temp;
+				}
+			}
+
+			if (maxA < minB || maxB < minA)
+			{
+				ret = false;
+				break;
 			}
 		}
+	}
+
+	if (ret)
+	{
+		//Collision Normal
+		MyVector dir = (a->position - b->position);
+		dir.Normalize();
+		//1
+		float restitution = a->restitution;
+		//0.5
+		if (b->restitution < restitution)
+			restitution = b->restitution;
+
+		AddContact(a, b, restitution, dir);
 	}
 }

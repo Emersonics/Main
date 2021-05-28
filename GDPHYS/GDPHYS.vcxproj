@@ -153,6 +153,7 @@
     <ClCompile Include="Assignments\Springs\BungeeSpring.cpp" />
     <ClCompile Include="Assignments\Collision\ContactResolver.cpp" />
     <ClCompile Include="Assignments\Links\Cable.cpp" />
+    <ClCompile Include="Assignments\RigidBodies\CircleRb.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Assignments\MyParticle.cpp" />
     <ClCompile Include="Assignments\MyVector.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Assignments\Collision\ParticleContact.cpp" />
     <ClCompile Include="Assignments\Links\ParticleLink.cpp" />
     <ClCompile Include="Assignments\Links\Rod.cpp" />
+    <ClCompile Include="Assignments\RigidBodies\RectPrismRb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignments\Springs\AnchoredSpring.h" />
@@ -182,6 +184,8 @@
     <ClInclude Include="Assignments\Links\ParticleLink.h" />
     <ClInclude Include="Assignments\Links\Rod.h" />
     <ClInclude Include="Assignments\Links\Cable.h" />
+    <ClInclude Include="Assignments\RigidBodies\CircleRb.h" />
+    <ClInclude Include="Assignments\RigidBodies\RectPrismRb.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
