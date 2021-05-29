@@ -2,5 +2,5 @@
 
 void CircleRb::initializeRb(int particleType)
 {
-
+	this->particleType = particleType;
 }

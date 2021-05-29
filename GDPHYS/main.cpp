@@ -23,9 +23,8 @@
 #include "Assignments/Collision/ContactResolver.h"
 #include "Assignments/Links/Rod.h"
 #include "Assignments/Links/Cable.h"
-#include "Assignments/RigidBodies/RectPrismRb.h"
 #include "Assignments/RigidBodies/CircleRb.h"
-
+#include "Assignments/RigidBodies/RectPrismRb.h"
 #define PI 3.14159265
 
 using namespace std::chrono_literals;
@@ -58,38 +57,61 @@ int main() {
     vector <sf::RectangleShape*> rectList;
 
     //week 15 lesson
-    //RectPrismRb* originParticle = new RectPrismRb(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
+    CircleRb* originParticle = new CircleRb();
+    originParticle->initializeRb((int)particleType::Circ);
+    originParticle->mass = 5.0f;
+    originParticle->startPos = MyVector(100, 0);
+    originParticle->position = MyVector(100, 0);
+    originParticle->velocity = MyVector(0, 0);
+    originParticle->acceleration = MyVector(0, 0);
+    originParticle->lifeSpan = 1000.0f;
+    originParticle->stationary = false;
+    originParticle->dampening = 1;
+    originParticle->restitution = 0.6;
+    originParticle->radius = 20;
+    particleList.push_back(originParticle);
+    pWorld.addParticle(originParticle);
+
+    sf::CircleShape originShape(originParticle->radius);
+    originShape.setFillColor(sf::Color::White);
+    originShape.setOrigin(originShape.getRadius(), originShape.getRadius());
+    shapeList.push_back(&originShape);
+    MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    originShape.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
+
+    RenderParticle c_rp = RenderParticle(originParticle, &originShape);
+    RenderParticles.push_back(&c_rp);
+
+    originParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+
+    //rect
     RectPrismRb* rectParticle = new RectPrismRb();
-    //position of shape
-    rectParticle->position = MyVector(245, 200);
-    //velocity of shape
-    rectParticle->velocity = MyVector(0, 0);
-    //acceleration of shape
-    rectParticle->acceleration = MyVector(0, 0);
-    rectParticle->dampening = 1;
-    rectParticle->lifeSpan = 100.0f;
-    rectParticle->mass = 5.0;
-    rectParticle->w = 100;
-    rectParticle->h = 200;
     rectParticle->initializeRb((int)particleType::Rect);
+    rectParticle->mass = 5.0f;
+    rectParticle->startPos = MyVector(100, 200);
+    rectParticle->position = MyVector(100, 200);
+    rectParticle->velocity = MyVector(0, 0);
+    rectParticle->acceleration = MyVector(0, 0);
+    rectParticle->lifeSpan = 1000.0f;
+    rectParticle->stationary = false;
+    rectParticle->dampening = 1;
     rectParticle->restitution = 0.6;
-    particleList.push_back((MyParticle*)rectParticle);
-    pWorld.addParticle((MyParticle*)rectParticle);
+    rectParticle->radius = 20;
+    particleList.push_back(originParticle);
+    pWorld.addParticle(originParticle);
 
     sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
     rectShape.setFillColor(sf::Color::White);
-    rectShape.setOutlineColor(sf::Color::White);
-    rectParticle->position = Utils::P6ToSFMLPoint(MyVector(245, 200));
-    rectShape.setOrigin(rectParticle->w / 2, rectParticle->h / 2);
-    rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
+    sf::Vector2f s = rectShape.getSize();
+    rectShape.setOrigin(s.x / 2, s.y / 2); //suspicious
     rectList.push_back(&rectShape);
+    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    originShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
 
-
-    RenderParticle c_rp = RenderParticle(rectParticle, &rectShape);
+    RenderParticle c_rp1 = RenderParticle(rectParticle, &rectShape);
     RenderParticles.push_back(&c_rp);
 
-    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10, 0));
-
+    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
     /*//texture
     sf::Texture tt;
@@ -100,8 +122,8 @@ int main() {
     MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
     sf::Vector2u s = sampleShuriken.getTexture()->getSize();
     sampleShuriken.setOrigin(s.x / 2, s.y / 2);
-    sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
-    */
+    sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);*/
+
 
     /*//rotation lesson
     //bearing
@@ -307,11 +329,17 @@ int main() {
             curr_ns -= timestep;
 
             //week 15
-            //rectParticle->position = Utils::P6ToSFMLPoint(rectParticle->position);
-            rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
-            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
-            //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
-            //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
+            sampleShurikenPos = Utils::P6ToSFMLPoint(originParticle->position);
+            originShape.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
+            originShape.setRotation(originParticle->rotation * (180 / acos(-1.0f)));
+
+            //rect
+            /*sampleShurikenPos1 = Utils::P6ToSFMLPoint(rectParticle->position);
+            rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
+            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));*/
+            cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
+            cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
+
             while (window.pollEvent(event))
             {
                 switch (event.type)

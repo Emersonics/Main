@@ -50,7 +50,7 @@ public:
 	void AddForceOnPoint(MyVector locPoint, MyVector force);
 protected:
 	float accumulatedTorque = 0;
-protected:
+public:
 	bool stationary = false;
 	MyVector startPos;
 	void stationarySetting();
