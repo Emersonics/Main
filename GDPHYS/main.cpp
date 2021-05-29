@@ -42,7 +42,7 @@ void instantiateRB(PhysicsWorld& pWorld, vector <MyParticle*>& particleList, vec
     MyVector position, MyVector circleUtilPos, MyVector locPoint, MyVector force, float radius);
 
 //0 = Particle 1 = Rigid 2 = Circ 3 = Rect
-enum particleType { Particle = 0, Rigid = 1, Circ = 2, Rect = 3 };
+enum particleType { Particle = 0, Rigid = 1, Circ = 2, Rect = 3 }; //enum type for particleType
 
 int main() {
     srand(time(NULL));
@@ -53,18 +53,20 @@ int main() {
     std::list<RenderParticle*> RenderParticles;
     Utils::offset = MyVector(0, 250);
     DragForceGenerator df = DragForceGenerator(0, 0); //setted to zero(0); kinetic friction
+
     //storage of the particles and shapes object
     vector <MyParticle*> particleList;
     vector <sf::CircleShape*> shapeList;
     vector <sf::RectangleShape*> rectList;
 
     //week 15 lesson
+    //instantiation of the circleObjects with rigidBodies
     //circle1
     CircleRb* circleParticle1 = new CircleRb();
     circleParticle1->initializeRb((int)particleType::Circ);
     circleParticle1->mass = 5.0f;
-    circleParticle1->startPos = MyVector(400, 0);
-    circleParticle1->position = MyVector(400, 0);
+    circleParticle1->startPos = MyVector(400, 100);
+    circleParticle1->position = MyVector(400, 100);
     circleParticle1->velocity = MyVector(0, 0);
     circleParticle1->acceleration = MyVector(0, 0);
     circleParticle1->lifeSpan = 1000.0f;
@@ -79,19 +81,20 @@ int main() {
     circleShape1.setFillColor(sf::Color::Red);
     circleShape1.setOrigin(circleShape1.getRadius(), circleShape1.getRadius());
     shapeList.push_back(&circleShape1);
-    MyVector circlePos1 = Utils::P6ToSFMLPoint(MyVector(400, 0));
+    MyVector circlePos1 = Utils::P6ToSFMLPoint(MyVector(400, 100));
     circleShape1.setPosition(circlePos1.x, circlePos1.y);
 
     RenderParticle c_rPC1 = RenderParticle(circleParticle1, &circleShape1);
     RenderParticles.push_back(&c_rPC1);
+    //adds a force to the object directing to a specific local point location
     circleParticle1->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
     //circle2
     CircleRb* circleParticle2 = new CircleRb();
     circleParticle2->initializeRb((int)particleType::Circ);
     circleParticle2->mass = 5.0f;
-    circleParticle2->startPos = MyVector(700, 0);
-    circleParticle2->position = MyVector(700, 0);
+    circleParticle2->startPos = MyVector(700, 100);
+    circleParticle2->position = MyVector(700, 100);
     circleParticle2->velocity = MyVector(0, 0);
     circleParticle2->acceleration = MyVector(0, 0);
     circleParticle2->lifeSpan = 1000.0f;
@@ -106,19 +109,20 @@ int main() {
     circleShape2.setFillColor(sf::Color::Red);
     circleShape2.setOrigin(circleShape2.getRadius(), circleShape2.getRadius());
     shapeList.push_back(&circleShape2);
-    MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(700, 0));
+    MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(700, 100));
     circleShape2.setPosition(circlePos2.x, circlePos2.y);
 
     RenderParticle c_rPC2 = RenderParticle(circleParticle2, &circleShape2);
     RenderParticles.push_back(&c_rPC2);
+    //adds a force to the object directing to a specific local point location
     circleParticle2->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
 
     //circle3
     CircleRb* circleParticle3 = new CircleRb();
     circleParticle3->initializeRb((int)particleType::Circ);
     circleParticle3->mass = 5.0f;
-    circleParticle3->startPos = MyVector(700, -200);
-    circleParticle3->position = MyVector(700, -200);
+    circleParticle3->startPos = MyVector(700, -100);
+    circleParticle3->position = MyVector(700, -100);
     circleParticle3->velocity = MyVector(0, 0);
     circleParticle3->acceleration = MyVector(0, 0);
     circleParticle3->lifeSpan = 1000.0f;
@@ -133,29 +137,22 @@ int main() {
     circleShape3.setFillColor(sf::Color::Red);
     circleShape3.setOrigin(circleShape3.getRadius(), circleShape3.getRadius());
     shapeList.push_back(&circleShape3);
-    MyVector circlePos3 = Utils::P6ToSFMLPoint(MyVector(700, -200));
+    MyVector circlePos3 = Utils::P6ToSFMLPoint(MyVector(700, -100));
     circleShape3.setPosition(circlePos3.x, circlePos3.y);
 
     RenderParticle c_rPC3 = RenderParticle(circleParticle3, &circleShape3);
     RenderParticles.push_back(&c_rPC3);
+    //adds a force to the object directing to a specific local point location
     circleParticle3->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
 
-
-    /*//Circle2
-    CircleRb* circleParticle2 = new CircleRb();
-    sf::CircleShape circleShape2(20.f);
-    MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(245, 20));
-    instantiateRB(pWorld, particleList, shapeList, circleParticle2, &circleShape2, RenderParticles,
-        MyVector(600, 0), circlePos2, MyVector(0, 10), MyVector(-10000, 0), 20.f);*/
-
-    
+    //instantiation of the rectangularObjects with rigidBodies
     //rect 1
     RectPrismRb* rectParticle1 = new RectPrismRb();
     rectParticle1->w = 120;
     rectParticle1->h = 40;
     rectParticle1->mass = 5.0f;
-    rectParticle1->startPos = MyVector(245, -200);
-    rectParticle1->position = MyVector(245, -200);
+    rectParticle1->startPos = MyVector(400, -100);
+    rectParticle1->position = MyVector(400, -100);
     rectParticle1->velocity = MyVector(0, 0);
     rectParticle1->acceleration = MyVector(0, 0);
     rectParticle1->lifeSpan = 1000.0f;
@@ -174,21 +171,21 @@ int main() {
     sf::Vector2f s1 = rectShape1.getSize();
     rectShape1.setOrigin(s1.x / 2, s1.y / 2); //suspicious
     rectList.push_back(&rectShape1);
-    MyVector rectPos1 = Utils::P6ToSFMLPoint(MyVector(245, -200));
+    MyVector rectPos1 = Utils::P6ToSFMLPoint(MyVector(400, -00));
     rectShape1.setPosition(rectPos1.x, rectPos1.y);
 
     RenderParticle c_rPR1 = RenderParticle(rectParticle1, &rectShape1);
     RenderParticles.push_back(&c_rPR1);
-
-    rectParticle1->AddForceOnPoint(MyVector(0, 40), MyVector(10000, 0));
+    //adds a force to the object directing to a specific local point location
+    rectParticle1->AddForceOnPoint(MyVector(0, 100), MyVector(10000, 0));
     
     //rect 2
     RectPrismRb* rectParticle2 = new RectPrismRb();
     rectParticle2->w = 120;
     rectParticle2->h = 40;
     rectParticle2->mass = 5.0f;
-    rectParticle2->startPos = MyVector(245, -300);
-    rectParticle2->position = MyVector(245, -300);
+    rectParticle2->startPos = MyVector(400, -300);
+    rectParticle2->position = MyVector(400, -300);
     rectParticle2->velocity = MyVector(0, 0);
     rectParticle2->acceleration = MyVector(0, 0);
     rectParticle2->lifeSpan = 1000.0f;
@@ -207,12 +204,12 @@ int main() {
     sf::Vector2f s2 = rectShape2.getSize();
     rectShape2.setOrigin(s2.x / 2, s2.y / 2); //suspicious
     rectList.push_back(&rectShape2);
-    MyVector rectPos2 = Utils::P6ToSFMLPoint(MyVector(245, -300));
+    MyVector rectPos2 = Utils::P6ToSFMLPoint(MyVector(400, -300));
     rectShape2.setPosition(rectPos2.x, rectPos2.y);
 
     RenderParticle c_rPR2 = RenderParticle(rectParticle2, &rectShape2);
     RenderParticles.push_back(&c_rPR2);
-
+    //adds a force to the object directing to a specific local point location
     rectParticle2->AddForceOnPoint(MyVector(0, 100), MyVector(10000, 0));
 
     
@@ -221,8 +218,8 @@ int main() {
     rectParticle3->w = 120;
     rectParticle3->h = 40;
     rectParticle3->mass = 5.0f;
-    rectParticle3->startPos = MyVector(700, -400);
-    rectParticle3->position = MyVector(700, -400);
+    rectParticle3->startPos = MyVector(700, -300);
+    rectParticle3->position = MyVector(700, -300);
     rectParticle3->velocity = MyVector(0, 0);
     rectParticle3->acceleration = MyVector(0, 0);
     rectParticle3->lifeSpan = 1000.0f;
@@ -230,7 +227,7 @@ int main() {
     rectParticle3->dampening = 0.9;
     rectParticle3->restitution = 0.6;
     rectParticle3->radius = sqrt(pow(rectParticle3->h,2) + pow(rectParticle3->w, 2));
-    rectParticle3->rotation = 45 * (acos(-1) / 180);
+    rectParticle3->rotation = 90 * (acos(-1) / 180);
     rectParticle3->initializeRb((int)particleType::Rect);
     particleList.push_back(rectParticle3);
     pWorld.addParticle(rectParticle3);
@@ -241,15 +238,13 @@ int main() {
     sf::Vector2f s3 = rectShape3.getSize();
     rectShape3.setOrigin(s3.x / 2, s3.y / 2); //suspicious
     rectList.push_back(&rectShape3);
-    MyVector rectPos3 = Utils::P6ToSFMLPoint(MyVector(700, -400));
+    MyVector rectPos3 = Utils::P6ToSFMLPoint(MyVector(700, -300));
     rectShape3.setPosition(rectPos3.x, rectPos3.y);
 
     RenderParticle c_rPR3 = RenderParticle(rectParticle3, &rectShape3);
     RenderParticles.push_back(&c_rPR3);
-
-    rectParticle3->AddForceOnPoint(MyVector(0, 40), MyVector(-10000, 0));
-    
-
+    //adds a force to the object directing to a specific local point location
+    rectParticle3->AddForceOnPoint(MyVector(0, 100), MyVector(-10000, 0));
 
     int standing = 0;
 
@@ -298,8 +293,8 @@ int main() {
 
             curr_ns -= timestep;
 
-
-
+            //updates the rigidPoints of rectangleObjects per frame
+            //also gets the current position of the particle and assigns it to the rectShape component
             //rect1
             rectParticle1->initializeRb((int)particleType::Rect);
             rectPos1 = Utils::P6ToSFMLPoint(rectParticle1->position);
@@ -438,6 +433,12 @@ float RandomFloat(float a, float b)
 }
 
 
+/*//Circle2
+CircleRb* circleParticle2 = new CircleRb();
+sf::CircleShape circleShape2(20.f);
+MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+instantiateRB(pWorld, particleList, shapeList, circleParticle2, &circleShape2, RenderParticles,
+    MyVector(600, 0), circlePos2, MyVector(0, 10), MyVector(-10000, 0), 20.f);*/
 void instantiateRB(PhysicsWorld& pWorld, vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList, CircleRb* circle, sf::CircleShape* circleShape, std::list<RenderParticle*>& RenderParticles,
     MyVector position, MyVector circleUtilPos, MyVector locPoint, MyVector force, float radius)
 {

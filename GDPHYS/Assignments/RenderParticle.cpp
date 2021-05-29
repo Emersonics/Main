@@ -1,13 +1,17 @@
 #include "RenderParticle.h"
 #include "MyVector.h"
 
+//calls to draw the shapes depending on the particleType of the particle
 void RenderParticle::Draw(sf::RenderWindow* window)
 {
+	//checks first if the particle is Destroyed
 	if (!PhysicParticle->IsDestroyed())
 	{
+		//gets the renderPoint of the different kinds of particle
 		MyVector v = PhysicParticle->GetRenderPoint();
 		MyVector c = CircParticle->GetRenderPoint();
 		MyVector r = RectParticle->GetRenderPoint();
+		//checks the particleType then sets the position
 		switch (particleType)
 		{
 		case 0:
@@ -26,6 +30,7 @@ void RenderParticle::Draw(sf::RenderWindow* window)
 
 		//draw the shape
 		//0 = Particle 1 = Rigid 2 = Circ 3 = Rect
+		//checks the particleType then draws the shape
 		switch (particleType)
 		{
 		case 0:
@@ -41,7 +46,7 @@ void RenderParticle::Draw(sf::RenderWindow* window)
 	}
 }
 
-
+//renderParticle constructor for the normal Particle type
 RenderParticle::RenderParticle(MyParticle* p, sf::Shape* s)
 {
 	this->PhysicParticle = p;
@@ -55,6 +60,7 @@ RenderParticle::RenderParticle(MyParticle* p, sf::Shape* s)
 	this->particleType = p->particleType;
 }
 
+//renderParticle constructor for the rectangle Particle type
 RenderParticle::RenderParticle(RectPrismRb* p, sf::RectangleShape* s)
 {
 	this->PhysicParticle = new MyParticle();
@@ -68,6 +74,7 @@ RenderParticle::RenderParticle(RectPrismRb* p, sf::RectangleShape* s)
 	this->particleType = p->particleType;
 }
 
+//renderParticle constructor for the circle Particle type
 RenderParticle::RenderParticle(CircleRb* p, sf::CircleShape* s)
 {
 	this->PhysicParticle = new MyParticle();

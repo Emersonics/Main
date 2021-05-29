@@ -2,8 +2,10 @@
 #include "../MyVector.h"
 #include "../Utils.h"
 
+//initializes the rigidBody for the object and assigns the updated rect corner points
 void RectPrismRb::initializeRb(int particleType)
 {
+	//also assigns the particle type for rect
 	this->particleType = particleType;
 
 	MyVector ul = MyVector(-w / 2, h / 2);
