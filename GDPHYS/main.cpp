@@ -87,12 +87,11 @@ int main() {
     //rect
     RectPrismRb* rectParticle = new RectPrismRb();
     rectParticle->initializeRb((int)particleType::Rect);
-    rectParticle->rotation = 100;
-    rectParticle->w = 100;
-    rectParticle->h = 200;
+    rectParticle->w = 40;
+    rectParticle->h = 80;
     rectParticle->mass = 5.0f;
-    rectParticle->startPos = MyVector(245, 100);
-    rectParticle->position = MyVector(245, 100);
+    rectParticle->startPos = MyVector(245, -50);
+    rectParticle->position = MyVector(245, -50);
     rectParticle->velocity = MyVector(0, 0);
     rectParticle->acceleration = MyVector(0, 0);
     rectParticle->lifeSpan = 1000.0f;
@@ -115,7 +114,7 @@ int main() {
     RenderParticle c_rp1 = RenderParticle(rectParticle, &rectShape);
     RenderParticles.push_back(&c_rp1);
 
-    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(-1000, 0));
+    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
 
     /*//texture
     sf::Texture tt;
