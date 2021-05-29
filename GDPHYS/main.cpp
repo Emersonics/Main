@@ -148,12 +148,12 @@ int main() {
     instantiateRB(pWorld, particleList, shapeList, circleParticle2, &circleShape2, RenderParticles,
         MyVector(600, 0), circlePos2, MyVector(0, 10), MyVector(-10000, 0), 20.f);*/
 
-
-        //rect 1
+    
+    //rect 1
     RectPrismRb* rectParticle1 = new RectPrismRb();
     rectParticle1->initializeRb((int)particleType::Rect);
-    rectParticle1->w = 40;
-    rectParticle1->h = 120;
+    rectParticle1->w = 120;
+    rectParticle1->h = 40;
     rectParticle1->mass = 5.0f;
     rectParticle1->startPos = MyVector(245, -200);
     rectParticle1->position = MyVector(245, -200);
@@ -179,17 +179,17 @@ int main() {
     RenderParticle c_rPR1 = RenderParticle(rectParticle1, &rectShape1);
     RenderParticles.push_back(&c_rPR1);
 
-    rectParticle1->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
-
+    rectParticle1->AddForceOnPoint(MyVector(-20, 100), MyVector(10000, 0));
+    
     
     //rect 2
     RectPrismRb* rectParticle2 = new RectPrismRb();
     rectParticle2->initializeRb((int)particleType::Rect);
-    rectParticle2->w = 40;
-    rectParticle2->h = 120;
+    rectParticle2->w = 120;
+    rectParticle2->h = 40;
     rectParticle2->mass = 5.0f;
-    rectParticle2->startPos = MyVector(245, -400);
-    rectParticle2->position = MyVector(245, -400);
+    rectParticle2->startPos = MyVector(245, -300);
+    rectParticle2->position = MyVector(245, -300);
     rectParticle2->velocity = MyVector(0, 0);
     rectParticle2->acceleration = MyVector(0, 0);
     rectParticle2->lifeSpan = 1000.0f;
@@ -212,14 +212,14 @@ int main() {
     RenderParticle c_rPR2 = RenderParticle(rectParticle2, &rectShape2);
     RenderParticles.push_back(&c_rPR2);
 
-    rectParticle2->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+    rectParticle2->AddForceOnPoint(MyVector(-20, 100), MyVector(10000, 0));
 
-    /*
+    
     //rect 3
     RectPrismRb* rectParticle3 = new RectPrismRb();
     rectParticle3->initializeRb((int)particleType::Rect);
-    rectParticle3->w = 40;
-    rectParticle3->h = 120;
+    rectParticle3->w = 120;
+    rectParticle3->h = 40;
     rectParticle3->mass = 5.0f;
     rectParticle3->startPos = MyVector(700, -400);
     rectParticle3->position = MyVector(700, -400);
@@ -245,8 +245,8 @@ int main() {
     RenderParticle c_rPR3 = RenderParticle(rectParticle3, &rectShape3);
     RenderParticles.push_back(&c_rPR3);
 
-    rectParticle3->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
-    */
+    rectParticle3->AddForceOnPoint(MyVector(-20, 100), MyVector(-10000, 0));
+    
 
 
     int standing = 0;
@@ -313,6 +313,7 @@ int main() {
             circleShape3.setPosition(circlePos3.x, circlePos3.y);
             circleShape3.setRotation(circleParticle3->rotation * (180 / acos(-1.0f)));
 
+            
             //rect1
             rectPos1 = Utils::P6ToSFMLPoint(rectParticle1->position);
             rectShape1.setPosition(rectPos1.x, rectPos1.y);
@@ -324,11 +325,11 @@ int main() {
             rectShape2.setPosition(rectPos2.x, rectPos2.y);
             rectShape2.setRotation(rectParticle2->rotation * (180 / acos(-1.0f)));
 
-            /*
+            
             //rect3
             rectPos3 = Utils::P6ToSFMLPoint(rectParticle3->position);
             rectShape3.setPosition(rectPos3.x, rectPos3.y);
-            rectShape3.setRotation(rectParticle3->rotation * (180 / acos(-1.0f)));*/
+            rectShape3.setRotation(rectParticle3->rotation * (180 / acos(-1.0f)));
 
             //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
             //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;

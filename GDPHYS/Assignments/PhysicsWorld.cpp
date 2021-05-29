@@ -159,7 +159,7 @@ void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
 	}
 
 	float maxX = minX;
-	if (minX < -(a->w / 2))
+	if (maxX < -(a->w / 2))
 	{
 		maxX = -(a->w / 2);
 	}
@@ -171,7 +171,7 @@ void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
 	}
 
 	float maxY = minY;
-	if (minY < -(a->h / 2))
+	if (maxY < -(a->h / 2))
 	{
 		maxY = -(a->h / 2);
 	}
@@ -206,9 +206,9 @@ void PhysicsWorld::GetContact(RectPrismRb* a, RectPrismRb* b)
 	bool ret = true;
 	for (int i = 0; i < rects.size(); i++)
 	{
-		for (int e1 = 0; i < rects[i]->points.size(); e1++)
+		for (int e1 = 0; e1 < rects[i]->points.size(); e1++)
 		{
-			int e2 = (e1 + 1) & rects[i]->points.size();
+			int e2 = (e1 + 1) % rects[i]->points.size();
 
 			MyVector p1 = rects[i]->points[e1];
 			MyVector p2 = rects[i]->points[e2];
