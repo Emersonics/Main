@@ -40,7 +40,7 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
 float RandomFloat(float a, float b);
 
 //0 = Particle 1 = Rigid 2 = Circ 3 = Rect
-enum particleType { Particle = 0, Rigid, Circ, Rect };
+enum particleType { Particle = 0, Rigid = 1, Circ = 2, Rect = 3 };
 
 int main() {
     srand(time(NULL));
@@ -87,29 +87,32 @@ int main() {
     //rect
     RectPrismRb* rectParticle = new RectPrismRb();
     rectParticle->initializeRb((int)particleType::Rect);
+    rectParticle->w = 100;
+    rectParticle->h = 200;
     rectParticle->mass = 5.0f;
-    rectParticle->startPos = MyVector(100, 200);
-    rectParticle->position = MyVector(100, 200);
+    rectParticle->startPos = MyVector(245, 200);
+    rectParticle->position = MyVector(245, 200);
     rectParticle->velocity = MyVector(0, 0);
     rectParticle->acceleration = MyVector(0, 0);
     rectParticle->lifeSpan = 1000.0f;
     rectParticle->stationary = false;
     rectParticle->dampening = 1;
     rectParticle->restitution = 0.6;
-    rectParticle->radius = 20;
-    particleList.push_back(originParticle);
-    pWorld.addParticle(originParticle);
+    rectParticle->radius = 0;
+    particleList.push_back(rectParticle);
+    pWorld.addParticle(rectParticle);
 
     sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
     rectShape.setFillColor(sf::Color::White);
+    rectShape.setOutlineColor(sf::Color::White);
     sf::Vector2f s = rectShape.getSize();
     rectShape.setOrigin(s.x / 2, s.y / 2); //suspicious
     rectList.push_back(&rectShape);
-    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, 20));
-    originShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
+    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, 200));
+    rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
 
     RenderParticle c_rp1 = RenderParticle(rectParticle, &rectShape);
-    RenderParticles.push_back(&c_rp);
+    RenderParticles.push_back(&c_rp1);
 
     rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
@@ -328,17 +331,18 @@ int main() {
 
             curr_ns -= timestep;
 
+            
             //week 15
             sampleShurikenPos = Utils::P6ToSFMLPoint(originParticle->position);
             originShape.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
             originShape.setRotation(originParticle->rotation * (180 / acos(-1.0f)));
-
+            
             //rect
-            /*sampleShurikenPos1 = Utils::P6ToSFMLPoint(rectParticle->position);
+            sampleShurikenPos1 = Utils::P6ToSFMLPoint(rectParticle->position);
             rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
-            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));*/
+            //rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
             cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
-            cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
+            //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
 
             while (window.pollEvent(event))
             {
