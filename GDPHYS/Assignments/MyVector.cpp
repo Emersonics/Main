@@ -9,7 +9,7 @@ MyVector::MyVector(float x, float y, float z) : x(x), y(y), z(z)
 void MyVector::Normalize()
 {
 	float n = getMagnitude();
-	if (n > 0) {
+	if (n != 0) {
 		(*this) *= ((1.0f) / n);
 	}
 }
@@ -81,7 +81,7 @@ MyVector MyVector::ComponentProduct(const MyVector v)
 
 float MyVector::getScalarProduct(MyVector vec1, MyVector vec2)
 {
-	return (vec1.x * vec2.y) + (vec1.y * vec2.x);
+	return (vec1.x * vec2.y) - (vec1.y * vec2.x);
 }
 
 MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)

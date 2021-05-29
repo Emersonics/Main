@@ -69,7 +69,7 @@ int main() {
     circleParticle1->acceleration = MyVector(0, 0);
     circleParticle1->lifeSpan = 1000.0f;
     circleParticle1->stationary = false;
-    circleParticle1->dampening = 1;
+    circleParticle1->dampening = 0.9;
     circleParticle1->restitution = 0.6;
     circleParticle1->radius = 20;
     particleList.push_back(circleParticle1);
@@ -96,7 +96,7 @@ int main() {
     circleParticle2->acceleration = MyVector(0, 0);
     circleParticle2->lifeSpan = 1000.0f;
     circleParticle2->stationary = false;
-    circleParticle2->dampening = 1;
+    circleParticle2->dampening = 0.9;
     circleParticle2->restitution = 0.6;
     circleParticle2->radius = 20;
     particleList.push_back(circleParticle2);
@@ -123,7 +123,7 @@ int main() {
     circleParticle3->acceleration = MyVector(0, 0);
     circleParticle3->lifeSpan = 1000.0f;
     circleParticle3->stationary = false;
-    circleParticle3->dampening = 1;
+    circleParticle3->dampening = 0.9;
     circleParticle3->restitution = 0.6;
     circleParticle3->radius = 20;
     particleList.push_back(circleParticle3);
@@ -160,9 +160,10 @@ int main() {
     rectParticle1->acceleration = MyVector(0, 0);
     rectParticle1->lifeSpan = 1000.0f;
     rectParticle1->stationary = false;
-    rectParticle1->dampening = 1;
+    rectParticle1->dampening = 0.9;
     rectParticle1->restitution = 0.6;
-    rectParticle1->radius = rectParticle1->w / 2;
+    rectParticle1->radius = sqrt(pow(rectParticle1->h, 2) + pow(rectParticle1->w, 2));
+    rectParticle1->rotation = 45 * (acos(-1) / 180);
     rectParticle1->initializeRb((int)particleType::Rect);
     particleList.push_back(rectParticle1);
     pWorld.addParticle(rectParticle1);
@@ -179,8 +180,7 @@ int main() {
     RenderParticle c_rPR1 = RenderParticle(rectParticle1, &rectShape1);
     RenderParticles.push_back(&c_rPR1);
 
-    rectParticle1->AddForceOnPoint(MyVector(245, -180), MyVector(10000, 0));
-    
+    rectParticle1->AddForceOnPoint(MyVector(0, 40), MyVector(10000, 0));
     
     //rect 2
     RectPrismRb* rectParticle2 = new RectPrismRb();
@@ -193,9 +193,10 @@ int main() {
     rectParticle2->acceleration = MyVector(0, 0);
     rectParticle2->lifeSpan = 1000.0f;
     rectParticle2->stationary = false;
-    rectParticle2->dampening = 1;
+    rectParticle2->dampening = 0.9;
     rectParticle2->restitution = 0.6;
-    rectParticle2->radius = rectParticle2->w / 2;
+    rectParticle2->radius = sqrt(pow(rectParticle2->h, 2) + pow(rectParticle2->w, 2));
+    rectParticle2->rotation = 45 * (acos(-1) / 180);
     rectParticle2->initializeRb((int)particleType::Rect);
     particleList.push_back(rectParticle2);
     pWorld.addParticle(rectParticle2);
@@ -212,7 +213,7 @@ int main() {
     RenderParticle c_rPR2 = RenderParticle(rectParticle2, &rectShape2);
     RenderParticles.push_back(&c_rPR2);
 
-    rectParticle2->AddForceOnPoint(MyVector(245, -280), MyVector(10000, 0));
+    rectParticle2->AddForceOnPoint(MyVector(0, 100), MyVector(10000, 0));
 
     
     //rect 3
@@ -226,9 +227,10 @@ int main() {
     rectParticle3->acceleration = MyVector(0, 0);
     rectParticle3->lifeSpan = 1000.0f;
     rectParticle3->stationary = false;
-    rectParticle3->dampening = 1;
+    rectParticle3->dampening = 0.9;
     rectParticle3->restitution = 0.6;
-    rectParticle3->radius = rectParticle3->w / 2;
+    rectParticle3->radius = sqrt(pow(rectParticle3->h,2) + pow(rectParticle3->w, 2));
+    rectParticle3->rotation = 45 * (acos(-1) / 180);
     rectParticle3->initializeRb((int)particleType::Rect);
     particleList.push_back(rectParticle3);
     pWorld.addParticle(rectParticle3);
@@ -245,7 +247,7 @@ int main() {
     RenderParticle c_rPR3 = RenderParticle(rectParticle3, &rectShape3);
     RenderParticles.push_back(&c_rPR3);
 
-    rectParticle3->AddForceOnPoint(MyVector(700, -370), MyVector(10000, 0));
+    rectParticle3->AddForceOnPoint(MyVector(0, 40), MyVector(-10000, 0));
     
 
 
@@ -297,21 +299,6 @@ int main() {
             curr_ns -= timestep;
 
 
-            //week 15
-            //circle1
-            circlePos1 = Utils::P6ToSFMLPoint(circleParticle1->position);
-            circleShape1.setPosition(circlePos1.x, circlePos1.y);
-            circleShape1.setRotation(circleParticle1->rotation * (180 / acos(-1.0f)));
-
-            //circle2
-            circlePos2 = Utils::P6ToSFMLPoint(circleParticle2->position);
-            circleShape2.setPosition(circlePos2.x, circlePos2.y);
-            circleShape2.setRotation(circleParticle2->rotation * (180 / acos(-1.0f)));
-
-            //circle2
-            circlePos3 = Utils::P6ToSFMLPoint(circleParticle3->position);
-            circleShape3.setPosition(circlePos3.x, circlePos3.y);
-            circleShape3.setRotation(circleParticle3->rotation * (180 / acos(-1.0f)));
 
             //rect1
             rectParticle1->initializeRb((int)particleType::Rect);
@@ -330,6 +317,22 @@ int main() {
             rectPos3 = Utils::P6ToSFMLPoint(rectParticle3->position);
             rectShape3.setPosition(rectPos3.x, rectPos3.y);
             rectShape3.setRotation(rectParticle3->rotation * (180 / acos(-1.0f)));
+
+            //week 15
+            //circle1
+            circlePos1 = Utils::P6ToSFMLPoint(circleParticle1->position);
+            circleShape1.setPosition(circlePos1.x, circlePos1.y);
+            circleShape1.setRotation(circleParticle1->rotation * (180 / acos(-1.0f)));
+
+            //circle2
+            circlePos2 = Utils::P6ToSFMLPoint(circleParticle2->position);
+            circleShape2.setPosition(circlePos2.x, circlePos2.y);
+            circleShape2.setRotation(circleParticle2->rotation * (180 / acos(-1.0f)));
+
+            //circle2
+            circlePos3 = Utils::P6ToSFMLPoint(circleParticle3->position);
+            circleShape3.setPosition(circlePos3.x, circlePos3.y);
+            circleShape3.setRotation(circleParticle3->rotation * (180 / acos(-1.0f)));
 
             //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
             //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;

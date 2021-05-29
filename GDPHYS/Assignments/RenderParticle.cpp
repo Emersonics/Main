@@ -49,6 +49,8 @@ RenderParticle::RenderParticle(MyParticle* p, sf::Shape* s)
 	this->CircParticle = new CircleRb();
 
 	this->ParticleShape = s;
+	this->rectShape = NULL;
+	this->circleShape = NULL;
 
 	this->particleType = p->particleType;
 }

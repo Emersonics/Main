@@ -92,6 +92,7 @@ float MyParticle::GetMomentOfInertia()
 void MyParticle::AddForceOnPoint(MyVector locPoint, MyVector f)
 {
 	accumulatedForce += f;
+	cout << MyVector::getScalarProduct(locPoint, f) << endl;
 	accumulatedTorque += MyVector::getScalarProduct(locPoint, f);
 }
 

@@ -111,7 +111,6 @@ void PhysicsWorld::GenerateParticleContacts(MyParticle* a, MyParticle* b)
 
 void PhysicsWorld::GenerateRigidbodyContacts(MyParticle* a, MyParticle* b)
 {
-	
 	if(
 	(a->GetType() == 2 && b->GetType() == 2) || 
 	(a->GetType() == 2 && b->GetType() == 0) || 
@@ -139,7 +138,7 @@ void PhysicsWorld::GenerateRigidbodyContacts(MyParticle* a, MyParticle* b)
 		}
 		else
 		{
-		GetContact(rect, b);
+			GetContact(rect, b);
 		}
 	}
 			
@@ -159,7 +158,7 @@ void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
 	}
 
 	float maxX = minX;
-	if (maxX < -(a->w / 2))
+	if (maxX < -(a->w / 2)) //maxX
 	{
 		maxX = -(a->w / 2);
 	}
@@ -190,7 +189,7 @@ void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
 		//1
 		float restitution = a->restitution;
 		//0.5
-		if (b->restitution < restitution)
+		if (b->restitution < a->restitution)
 			restitution = b->restitution;
 
 		AddContact(a, b, restitution, dir);
@@ -199,6 +198,8 @@ void PhysicsWorld::GetContact(RectPrismRb* a, MyParticle* b)
 
 void PhysicsWorld::GetContact(RectPrismRb* a, RectPrismRb* b)
 {
+	MyVector temp = MyVector(0, 0);
+
 	std::vector<RectPrismRb*> rects;
 	rects.push_back(a);
 	rects.push_back(b);
@@ -208,40 +209,42 @@ void PhysicsWorld::GetContact(RectPrismRb* a, RectPrismRb* b)
 	{
 		for (int e1 = 0; e1 < rects[i]->points.size(); e1++)
 		{
-			int e2 = (e1 + 1) % rects[i]->points.size();
+			int e2 = (e1 + 1);
+			e2 %= rects[i]->points.size();
 
 			MyVector p1 = rects[i]->points[e1];
 			MyVector p2 = rects[i]->points[e2];
 
 			MyVector perpendiculardge = MyVector(p2.y - p1.y, p1.x - p2.x);
 
-			float minA = perpendiculardge * rects[0]->points[0];
-			float maxA = perpendiculardge * rects[0]->points[0];
+			float minA = temp.getScalarProduct(perpendiculardge , rects[0]->points[0]);
+			float maxA = temp.getScalarProduct(perpendiculardge , rects[0]->points[0]);
+
 			for (int h = 1; h < rects[0]->points.size(); h++)
 			{
-				float temp = perpendiculardge * rects[0]->points[h];
-				if (temp < minA)
+				float proj = temp.getScalarProduct(perpendiculardge , rects[0]->points[h]);
+				if (proj < minA)
 				{
-					minA = temp;
+					minA = proj;
 				}
-				if (temp > maxA)
+				if (proj > maxA)
 				{
-					maxA = temp;
+					maxA = proj;
 				}
 			}
 
-			float minB = perpendiculardge * rects[1]->points[0];
-			float maxB = perpendiculardge * rects[1]->points[0];
+			float minB = temp.getScalarProduct(perpendiculardge , rects[1]->points[0]);
+			float maxB = temp.getScalarProduct(perpendiculardge , rects[1]->points[0]);
 			for (int h = 1; h < rects[1]->points.size(); h++)
 			{
-				float temp = perpendiculardge * rects[1]->points[h];
-				if (temp < minB)
+				float proj = temp.getScalarProduct(perpendiculardge , rects[1]->points[h]);
+				if (proj < minB)
 				{
-					minB = temp;
+					minB = proj;
 				}
-				if (temp > maxB)
+				if (proj > maxB)
 				{
-					maxB = temp;
+					maxB = proj;
 				}
 			}
 
@@ -261,9 +264,10 @@ void PhysicsWorld::GetContact(RectPrismRb* a, RectPrismRb* b)
 		//1
 		float restitution = a->restitution;
 		//0.5
-		if (b->restitution < restitution)
+		if (b->restitution < a->restitution)
 			restitution = b->restitution;
 
+		cout << "COLLIDE" << endl;
 		AddContact(a, b, restitution, dir);
 	}
 }
