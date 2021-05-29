@@ -73,7 +73,7 @@ int main() {
     pWorld.addParticle(originParticle);
 
     sf::CircleShape originShape(originParticle->radius);
-    originShape.setFillColor(sf::Color::White);
+    originShape.setFillColor(sf::Color::Red);
     originShape.setOrigin(originShape.getRadius(), originShape.getRadius());
     shapeList.push_back(&originShape);
     MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
@@ -87,34 +87,35 @@ int main() {
     //rect
     RectPrismRb* rectParticle = new RectPrismRb();
     rectParticle->initializeRb((int)particleType::Rect);
+    rectParticle->rotation = 100;
     rectParticle->w = 100;
     rectParticle->h = 200;
     rectParticle->mass = 5.0f;
-    rectParticle->startPos = MyVector(245, 200);
-    rectParticle->position = MyVector(245, 200);
+    rectParticle->startPos = MyVector(245, 100);
+    rectParticle->position = MyVector(245, 100);
     rectParticle->velocity = MyVector(0, 0);
     rectParticle->acceleration = MyVector(0, 0);
     rectParticle->lifeSpan = 1000.0f;
     rectParticle->stationary = false;
     rectParticle->dampening = 1;
     rectParticle->restitution = 0.6;
-    rectParticle->radius = 0;
+    rectParticle->radius = rectParticle->w / 2;
     particleList.push_back(rectParticle);
     pWorld.addParticle(rectParticle);
 
     sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
-    rectShape.setFillColor(sf::Color::White);
+    rectShape.setFillColor(sf::Color::Blue);
     rectShape.setOutlineColor(sf::Color::White);
     sf::Vector2f s = rectShape.getSize();
     rectShape.setOrigin(s.x / 2, s.y / 2); //suspicious
     rectList.push_back(&rectShape);
-    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, 200));
+    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, -100));
     rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
 
     RenderParticle c_rp1 = RenderParticle(rectParticle, &rectShape);
     RenderParticles.push_back(&c_rp1);
 
-    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(-1000, 0));
 
     /*//texture
     sf::Texture tt;
@@ -340,8 +341,8 @@ int main() {
             //rect
             sampleShurikenPos1 = Utils::P6ToSFMLPoint(rectParticle->position);
             rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
-            //rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
-            cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
+            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
+            //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
             //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
 
             while (window.pollEvent(event))
