@@ -38,6 +38,8 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
     float mass, MyVector position, MyVector velocity, MyVector acceleration, float lifeSpan, DragForceGenerator& df,
     vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList);
 float RandomFloat(float a, float b);
+void instantiateRB(PhysicsWorld& pWorld, vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList, CircleRb* circle, sf::CircleShape* circleShape, std::list<RenderParticle*>& RenderParticles,
+    MyVector position, MyVector circleUtilPos, MyVector locPoint, MyVector force, float radius);
 
 //0 = Particle 1 = Rigid 2 = Circ 3 = Rect
 enum particleType { Particle = 0, Rigid = 1, Circ = 2, Rect = 3 };
@@ -57,233 +59,196 @@ int main() {
     vector <sf::RectangleShape*> rectList;
 
     //week 15 lesson
-    CircleRb* originParticle = new CircleRb();
-    originParticle->initializeRb((int)particleType::Circ);
-    originParticle->mass = 5.0f;
-    originParticle->startPos = MyVector(100, 0);
-    originParticle->position = MyVector(100, 0);
-    originParticle->velocity = MyVector(0, 0);
-    originParticle->acceleration = MyVector(0, 0);
-    originParticle->lifeSpan = 1000.0f;
-    originParticle->stationary = false;
-    originParticle->dampening = 1;
-    originParticle->restitution = 0.6;
-    originParticle->radius = 20;
-    particleList.push_back(originParticle);
-    pWorld.addParticle(originParticle);
+    //circle1
+    CircleRb* circleParticle1 = new CircleRb();
+    circleParticle1->initializeRb((int)particleType::Circ);
+    circleParticle1->mass = 5.0f;
+    circleParticle1->startPos = MyVector(400, 0);
+    circleParticle1->position = MyVector(400, 0);
+    circleParticle1->velocity = MyVector(0, 0);
+    circleParticle1->acceleration = MyVector(0, 0);
+    circleParticle1->lifeSpan = 1000.0f;
+    circleParticle1->stationary = false;
+    circleParticle1->dampening = 1;
+    circleParticle1->restitution = 0.6;
+    circleParticle1->radius = 20;
+    particleList.push_back(circleParticle1);
+    pWorld.addParticle(circleParticle1);
 
-    sf::CircleShape originShape(originParticle->radius);
-    originShape.setFillColor(sf::Color::Red);
-    originShape.setOrigin(originShape.getRadius(), originShape.getRadius());
-    shapeList.push_back(&originShape);
-    MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
-    originShape.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
+    sf::CircleShape circleShape1(circleParticle1->radius);
+    circleShape1.setFillColor(sf::Color::Red);
+    circleShape1.setOrigin(circleShape1.getRadius(), circleShape1.getRadius());
+    shapeList.push_back(&circleShape1);
+    MyVector circlePos1 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    circleShape1.setPosition(circlePos1.x, circlePos1.y);
 
-    RenderParticle c_rp = RenderParticle(originParticle, &originShape);
-    RenderParticles.push_back(&c_rp);
+    RenderParticle c_rPC1 = RenderParticle(circleParticle1, &circleShape1);
+    RenderParticles.push_back(&c_rPC1);
+    circleParticle1->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
-    originParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+    //circle2
+    CircleRb* circleParticle2 = new CircleRb();
+    circleParticle2->initializeRb((int)particleType::Circ);
+    circleParticle2->mass = 5.0f;
+    circleParticle2->startPos = MyVector(700, 0);
+    circleParticle2->position = MyVector(700, 0);
+    circleParticle2->velocity = MyVector(0, 0);
+    circleParticle2->acceleration = MyVector(0, 0);
+    circleParticle2->lifeSpan = 1000.0f;
+    circleParticle2->stationary = false;
+    circleParticle2->dampening = 1;
+    circleParticle2->restitution = 0.6;
+    circleParticle2->radius = 20;
+    particleList.push_back(circleParticle2);
+    pWorld.addParticle(circleParticle2);
 
-    //rect
-    RectPrismRb* rectParticle = new RectPrismRb();
-    rectParticle->initializeRb((int)particleType::Rect);
-    rectParticle->w = 40;
-    rectParticle->h = 80;
-    rectParticle->mass = 5.0f;
-    rectParticle->startPos = MyVector(245, -50);
-    rectParticle->position = MyVector(245, -50);
-    rectParticle->velocity = MyVector(0, 0);
-    rectParticle->acceleration = MyVector(0, 0);
-    rectParticle->lifeSpan = 1000.0f;
-    rectParticle->stationary = false;
-    rectParticle->dampening = 1;
-    rectParticle->restitution = 0.6;
-    rectParticle->radius = rectParticle->w / 2;
-    particleList.push_back(rectParticle);
-    pWorld.addParticle(rectParticle);
+    sf::CircleShape circleShape2(circleParticle2->radius);
+    circleShape2.setFillColor(sf::Color::Red);
+    circleShape2.setOrigin(circleShape2.getRadius(), circleShape2.getRadius());
+    shapeList.push_back(&circleShape2);
+    MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    circleShape2.setPosition(circlePos2.x, circlePos2.y);
 
-    sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
-    rectShape.setFillColor(sf::Color::Blue);
-    rectShape.setOutlineColor(sf::Color::White);
-    sf::Vector2f s = rectShape.getSize();
-    rectShape.setOrigin(s.x / 2, s.y / 2); //suspicious
-    rectList.push_back(&rectShape);
-    MyVector sampleShurikenPos1 = Utils::P6ToSFMLPoint(MyVector(245, -100));
-    rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
+    RenderParticle c_rPC2 = RenderParticle(circleParticle2, &circleShape2);
+    RenderParticles.push_back(&c_rPC2);
+    circleParticle2->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
 
-    RenderParticle c_rp1 = RenderParticle(rectParticle, &rectShape);
-    RenderParticles.push_back(&c_rp1);
+    //circle3
+    CircleRb* circleParticle3 = new CircleRb();
+    circleParticle3->initializeRb((int)particleType::Circ);
+    circleParticle3->mass = 5.0f;
+    circleParticle3->startPos = MyVector(700, -200);
+    circleParticle3->position = MyVector(700, -200);
+    circleParticle3->velocity = MyVector(0, 0);
+    circleParticle3->acceleration = MyVector(0, 0);
+    circleParticle3->lifeSpan = 1000.0f;
+    circleParticle3->stationary = false;
+    circleParticle3->dampening = 1;
+    circleParticle3->restitution = 0.6;
+    circleParticle3->radius = 20;
+    particleList.push_back(circleParticle3);
+    pWorld.addParticle(circleParticle3);
 
-    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
+    sf::CircleShape circleShape3(circleParticle3->radius);
+    circleShape3.setFillColor(sf::Color::Red);
+    circleShape3.setOrigin(circleShape3.getRadius(), circleShape3.getRadius());
+    shapeList.push_back(&circleShape3);
+    MyVector circlePos3 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    circleShape3.setPosition(circlePos3.x, circlePos3.y);
 
-    /*//texture
-    sf::Texture tt;
-    if (!tt.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
-
-    sf::Sprite sampleShuriken;
-    sampleShuriken.setTexture(tt);
-    MyVector sampleShurikenPos = Utils::P6ToSFMLPoint(MyVector(245, 20));
-    sf::Vector2u s = sampleShuriken.getTexture()->getSize();
-    sampleShuriken.setOrigin(s.x / 2, s.y / 2);
-    sampleShuriken.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);*/
+    RenderParticle c_rPC3 = RenderParticle(circleParticle3, &circleShape3);
+    RenderParticles.push_back(&c_rPC3);
+    circleParticle3->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
 
 
-    /*//rotation lesson
-    //bearing
-    MyParticle* originPoint = new MyParticle(50.0f, MyVector(500, 260), MyVector(0, 0), MyVector(0, 0), 100, true);
-    originPoint->dampening = 1;
-    originPoint->restitution = 0.6;
-    originPoint->radius = 20;
-    particleList.push_back(originPoint);
-    pWorld.addParticle(originPoint);
+    /*//Circle2
+    CircleRb* circleParticle2 = new CircleRb();
+    sf::CircleShape circleShape2(20.f);
+    MyVector circlePos2 = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    instantiateRB(pWorld, particleList, shapeList, circleParticle2, &circleShape2, RenderParticles,
+        MyVector(600, 0), circlePos2, MyVector(0, 10), MyVector(-10000, 0), 20.f);*/
 
-    //originPoint->AddForce(MyVector(200000, 200000));
 
-    //weights
-    MyParticle* referencePoint1 = new MyParticle(0.10f, MyVector(500, 360), MyVector(0, 0), MyVector(0, 0), 100, false);
+        //rect 1
+    RectPrismRb* rectParticle1 = new RectPrismRb();
+    rectParticle1->initializeRb((int)particleType::Rect);
+    rectParticle1->w = 40;
+    rectParticle1->h = 120;
+    rectParticle1->mass = 5.0f;
+    rectParticle1->startPos = MyVector(245, -200);
+    rectParticle1->position = MyVector(245, -200);
+    rectParticle1->velocity = MyVector(0, 0);
+    rectParticle1->acceleration = MyVector(0, 0);
+    rectParticle1->lifeSpan = 1000.0f;
+    rectParticle1->stationary = false;
+    rectParticle1->dampening = 1;
+    rectParticle1->restitution = 0.6;
+    rectParticle1->radius = rectParticle1->w / 2;
+    particleList.push_back(rectParticle1);
+    pWorld.addParticle(rectParticle1);
 
-    //adds Force to the top-weight
-    referencePoint1->AddForce(MyVector(20000, 0));
+    sf::RectangleShape rectShape1(sf::Vector2f(rectParticle1->w, rectParticle1->h));
+    rectShape1.setFillColor(sf::Color::Blue);
+    rectShape1.setOutlineColor(sf::Color::White);
+    sf::Vector2f s1 = rectShape1.getSize();
+    rectShape1.setOrigin(s1.x / 2, s1.y / 2); //suspicious
+    rectList.push_back(&rectShape1);
+    MyVector rectPos1 = Utils::P6ToSFMLPoint(MyVector(245, -100));
+    rectShape1.setPosition(rectPos1.x, rectPos1.y);
 
-    referencePoint1->dampening = 0.8;
-    referencePoint1->restitution = 0.6;
-    referencePoint1->radius = 15;
-    particleList.push_back(referencePoint1);
-    pWorld.addParticle(referencePoint1);
+    RenderParticle c_rPR1 = RenderParticle(rectParticle1, &rectShape1);
+    RenderParticles.push_back(&c_rPR1);
 
-    MyParticle* referencePoint2 = new MyParticle(0.10f, MyVector(500, 160), MyVector(0, 0), MyVector(0, 0), 100, false);
-    referencePoint2->dampening = 0.8;
-    referencePoint2->restitution = 0.6;
-    referencePoint2->radius = 15;
-    particleList.push_back(referencePoint2);
-    pWorld.addParticle(referencePoint2);
+    rectParticle1->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
-    MyParticle* referencePoint3 = new MyParticle(0.10f, MyVector(600, 260), MyVector(0, 0), MyVector(0, 0), 100, false);
-    referencePoint3->dampening = 0.8;
-    referencePoint3->restitution = 0.6;
-    referencePoint3->radius = 15;
-    particleList.push_back(referencePoint3);
-    pWorld.addParticle(referencePoint3);
+    
+    //rect 2
+    RectPrismRb* rectParticle2 = new RectPrismRb();
+    rectParticle2->initializeRb((int)particleType::Rect);
+    rectParticle2->w = 40;
+    rectParticle2->h = 120;
+    rectParticle2->mass = 5.0f;
+    rectParticle2->startPos = MyVector(245, -400);
+    rectParticle2->position = MyVector(245, -400);
+    rectParticle2->velocity = MyVector(0, 0);
+    rectParticle2->acceleration = MyVector(0, 0);
+    rectParticle2->lifeSpan = 1000.0f;
+    rectParticle2->stationary = false;
+    rectParticle2->dampening = 1;
+    rectParticle2->restitution = 0.6;
+    rectParticle2->radius = rectParticle2->w / 2;
+    particleList.push_back(rectParticle2);
+    pWorld.addParticle(rectParticle2);
 
-    MyParticle* referencePoint4 = new MyParticle(0.10f, MyVector(400, 260), MyVector(0, 0), MyVector(0, 0), 100, false);
-    referencePoint4->dampening = 0.8;
-    referencePoint4->restitution = 0.6;
-    referencePoint4->radius = 15;
-    particleList.push_back(referencePoint4);
-    pWorld.addParticle(referencePoint4);
+    sf::RectangleShape rectShape2(sf::Vector2f(rectParticle2->w, rectParticle2->h));
+    rectShape2.setFillColor(sf::Color::Blue);
+    rectShape2.setOutlineColor(sf::Color::White);
+    sf::Vector2f s2 = rectShape2.getSize();
+    rectShape2.setOrigin(s2.x / 2, s2.y / 2); //suspicious
+    rectList.push_back(&rectShape2);
+    MyVector rectPos2 = Utils::P6ToSFMLPoint(MyVector(245, -100));
+    rectShape2.setPosition(rectPos2.x, rectPos2.y);
 
-    //links
-    Rod* r5 = new Rod();
-    r5->particles[0] = referencePoint1;
-    r5->particles[1] = referencePoint3;
-    r5->length = referencePoint1->position.getMagnitude(referencePoint3->position);
-    pWorld.Links.push_back(r5);
+    RenderParticle c_rPR2 = RenderParticle(rectParticle2, &rectShape2);
+    RenderParticles.push_back(&c_rPR2);
 
-    Rod* r6 = new Rod();
-    r6->particles[0] = referencePoint3;
-    r6->particles[1] = referencePoint2;
-    r6->length = referencePoint3->position.getMagnitude(referencePoint2->position);
-    pWorld.Links.push_back(r6);
+    rectParticle2->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
 
-    Rod* r7 = new Rod();
-    r7->particles[0] = referencePoint1;
-    r7->particles[1] = referencePoint4;
-    r7->length = referencePoint1->position.getMagnitude(referencePoint4->position);
-    pWorld.Links.push_back(r7);*/
-
-    /*Rod* r8 = new Rod();
-    r8->particles[0] = referencePoint4;
-    r8->particles[1] = referencePoint1;
-    r8->length = referencePoint4->position.getMagnitude(referencePoint1->position);
-    pWorld.Links.push_back(r8);*/
     /*
-        Rod* r1 = new Rod();
-        r1->particles[0] = originPoint;
-        r1->particles[1] = referencePoint1;
-        r1->length = originPoint->position.getMagnitude(referencePoint1->position);
-        pWorld.Links.push_back(r1);
+    //rect 3
+    RectPrismRb* rectParticle3 = new RectPrismRb();
+    rectParticle3->initializeRb((int)particleType::Rect);
+    rectParticle3->w = 40;
+    rectParticle3->h = 120;
+    rectParticle3->mass = 5.0f;
+    rectParticle3->startPos = MyVector(700, -400);
+    rectParticle3->position = MyVector(700, -400);
+    rectParticle3->velocity = MyVector(0, 0);
+    rectParticle3->acceleration = MyVector(0, 0);
+    rectParticle3->lifeSpan = 1000.0f;
+    rectParticle3->stationary = false;
+    rectParticle3->dampening = 1;
+    rectParticle3->restitution = 0.6;
+    rectParticle3->radius = rectParticle3->w / 2;
+    particleList.push_back(rectParticle3);
+    pWorld.addParticle(rectParticle3);
 
-        Rod* r3 = new Rod();
-        r3->particles[0] = originPoint;
-        r3->particles[1] = referencePoint3;
-        r3->length = 100;
-        pWorld.Links.push_back(r3);
+    sf::RectangleShape rectShape3(sf::Vector2f(rectParticle3->w, rectParticle3->h));
+    rectShape3.setFillColor(sf::Color::Blue);
+    rectShape3.setOutlineColor(sf::Color::White);
+    sf::Vector2f s3 = rectShape3.getSize();
+    rectShape3.setOrigin(s3.x / 2, s3.y / 2); //suspicious
+    rectList.push_back(&rectShape3);
+    MyVector rectPos3 = Utils::P6ToSFMLPoint(MyVector(245, -100));
+    rectShape3.setPosition(rectPos3.x, rectPos3.y);
 
-        Rod* r2 = new Rod();
-        r2->particles[0] = originPoint;
-        r2->particles[1] = referencePoint2;
-        r2->length = 100;
-        pWorld.Links.push_back(r2);
+    RenderParticle c_rPR3 = RenderParticle(rectParticle3, &rectShape3);
+    RenderParticles.push_back(&c_rPR3);
 
-        Rod* r4 = new Rod();
-        r4->particles[0] = originPoint;
-        r4->particles[1] = referencePoint4;
-        r4->length = 100;
-        pWorld.Links.push_back(r4);
+    rectParticle3->AddForceOnPoint(MyVector(0, 10), MyVector(-10000, 0));
+    */
 
-        //texture
-        sf::Texture t;
-        if (!t.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
 
-        sf::Sprite shuriken;
-        shuriken.setTexture(t);
-        shuriken.setOrigin(t.getSize().x / 2, t.getSize().y / 2);
-        MyVector shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
-
-        MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
-        MyVector weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
-        MyVector weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
-        MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);
-
-        //base shape
-        sf::CircleShape shape(originPoint->radius);
-        shape.setFillColor(sf::Color::White);
-        shape.setOrigin(shape.getRadius(), shape.getRadius());
-        shapeList.push_back(&shape);
-
-        RenderParticle rP1 = RenderParticle(originPoint, &shape);
-        RenderParticles.push_back(&rP1);
-
-        //weightShapes
-        sf::CircleShape wShape1(referencePoint1->radius);
-        wShape1.setFillColor(sf::Color::Blue);
-        wShape1.setOrigin(wShape1.getRadius(), wShape1.getRadius());
-        shapeList.push_back(&wShape1);
-        RenderParticle rP2 = RenderParticle(referencePoint1, &wShape1);
-        RenderParticles.push_back(&rP2);
-
-        sf::CircleShape wShape2(referencePoint2->radius);
-        wShape2.setFillColor(sf::Color::Blue);
-        wShape2.setOrigin(wShape2.getRadius(), wShape2.getRadius());
-        shapeList.push_back(&wShape2);
-        RenderParticle rP3 = RenderParticle(referencePoint2, &wShape2);
-        RenderParticles.push_back(&rP3);
-
-        sf::CircleShape wShape3(referencePoint3->radius);
-        wShape3.setFillColor(sf::Color::Blue);
-        wShape3.setOrigin(wShape3.getRadius(), wShape3.getRadius());
-        shapeList.push_back(&wShape3);
-        RenderParticle rP4 = RenderParticle(referencePoint3, &wShape3);
-        RenderParticles.push_back(&rP4);
-
-        sf::CircleShape wShape4(referencePoint4->radius);
-        wShape4.setFillColor(sf::Color::Blue);
-        wShape4.setOrigin(wShape4.getRadius(), wShape4.getRadius());
-        shapeList.push_back(&wShape4);
-        RenderParticle rP5 = RenderParticle(referencePoint4, &wShape4);
-        RenderParticles.push_back(&rP5);
-
-        MyVector renderPoint = originPoint->GetRenderPoint();
-        shape.setPosition(renderPoint.x, renderPoint.y);
-
-        renderPoint = referencePoint1->GetRenderPoint();
-        wShape1.setPosition(renderPoint.x, renderPoint.y);
-        //end of rotation lesson*/
-
-        /*pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
-        pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction*/
-
-        //custom variables
     int standing = 0;
 
     //clock/frame 
@@ -331,16 +296,40 @@ int main() {
 
             curr_ns -= timestep;
 
-            
+
             //week 15
-            sampleShurikenPos = Utils::P6ToSFMLPoint(originParticle->position);
-            originShape.setPosition(sampleShurikenPos.x, sampleShurikenPos.y);
-            originShape.setRotation(originParticle->rotation * (180 / acos(-1.0f)));
+            //circle1
+            circlePos1 = Utils::P6ToSFMLPoint(circleParticle1->position);
+            circleShape1.setPosition(circlePos1.x, circlePos1.y);
+            circleShape1.setRotation(circleParticle1->rotation * (180 / acos(-1.0f)));
+
+            //circle2
+            circlePos2 = Utils::P6ToSFMLPoint(circleParticle2->position);
+            circleShape2.setPosition(circlePos2.x, circlePos2.y);
+            circleShape2.setRotation(circleParticle2->rotation * (180 / acos(-1.0f)));
+
+            //circle2
+            circlePos3 = Utils::P6ToSFMLPoint(circleParticle3->position);
+            circleShape3.setPosition(circlePos3.x, circlePos3.y);
+            circleShape3.setRotation(circleParticle3->rotation * (180 / acos(-1.0f)));
+
+            //rect1
+            rectPos1 = Utils::P6ToSFMLPoint(rectParticle1->position);
+            rectShape1.setPosition(rectPos1.x, rectPos1.y);
+            rectShape1.setRotation(rectParticle1->rotation * (180 / acos(-1.0f)));
+
             
-            //rect
-            sampleShurikenPos1 = Utils::P6ToSFMLPoint(rectParticle->position);
-            rectShape.setPosition(sampleShurikenPos1.x, sampleShurikenPos1.y);
-            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
+            //rect2
+            rectPos2 = Utils::P6ToSFMLPoint(rectParticle2->position);
+            rectShape2.setPosition(rectPos2.x, rectPos2.y);
+            rectShape2.setRotation(rectParticle2->rotation * (180 / acos(-1.0f)));
+
+            /*
+            //rect3
+            rectPos3 = Utils::P6ToSFMLPoint(rectParticle3->position);
+            rectShape3.setPosition(rectPos3.x, rectPos3.y);
+            rectShape3.setRotation(rectParticle3->rotation * (180 / acos(-1.0f)));*/
+
             //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
             //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
 
@@ -442,5 +431,33 @@ float RandomFloat(float a, float b)
     float diff = b - a;
     float r = random * diff;
     return a + r;
+}
+
+
+void instantiateRB(PhysicsWorld& pWorld, vector <MyParticle*>& particleList, vector <sf::CircleShape*>& shapeList, CircleRb* circle, sf::CircleShape* circleShape, std::list<RenderParticle*>& RenderParticles,
+    MyVector position, MyVector circleUtilPos, MyVector locPoint, MyVector force, float radius)
+{
+    circle->initializeRb((int)particleType::Circ);
+    circle->mass = 5.0f;
+    circle->startPos = position;
+    circle->position = position;
+    circle->velocity = MyVector(0, 0);
+    circle->acceleration = MyVector(0, 0);
+    circle->lifeSpan = 1000.0f;
+    circle->stationary = false;
+    circle->dampening = 1;
+    circle->restitution = 0.6;
+    circle->radius = radius;
+    particleList.push_back(circle);
+    pWorld.addParticle(circle);
+
+    circleShape->setFillColor(sf::Color::Red);
+    circleShape->setOrigin(circleShape->getRadius(), circleShape->getRadius());
+    shapeList.push_back(circleShape);
+    circleShape->setPosition(circleUtilPos.x, circleUtilPos.y);
+
+    RenderParticle c_rp = RenderParticle(circle, circleShape);
+    RenderParticles.push_back(&c_rp);
+    circle->AddForceOnPoint(locPoint, force);
 }
 
