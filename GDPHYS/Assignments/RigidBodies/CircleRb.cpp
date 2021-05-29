@@ -1,6 +1,6 @@
 #include "CircleRb.h"
 
-void initializeRb(int particleType)
+void CircleRb::initializeRb(int particleType)
 {
 
 }

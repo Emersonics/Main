@@ -1,8 +1,8 @@
 #include "RenderParticle.h"
+#include "MyVector.h"
 
 void RenderParticle::Draw(sf::RenderWindow* window)
 {
-	cout << "Hello World" << endl;
 	if (!PhysicParticle->IsDestroyed())
 	{
 		MyVector v = PhysicParticle->GetRenderPoint();
@@ -42,16 +42,39 @@ void RenderParticle::Draw(sf::RenderWindow* window)
 }
 
 
-RenderParticle::RenderParticle(MyParticle* p, sf::Shape* s) : PhysicParticle(p), ParticleShape(s)
+RenderParticle::RenderParticle(MyParticle* p, sf::Shape* s)
 {
+	this->PhysicParticle = p;
+	this->RectParticle = new RectPrismRb();
+	this->CircParticle = new CircleRb();
+
+	this->ParticleShape = s;
+
 	this->particleType = p->particleType;
 }
 
-RenderParticle::RenderParticle(RectPrismRb* p, sf::RectangleShape* s) : RectParticle(p), rectShape(s)
+RenderParticle::RenderParticle(RectPrismRb* p, sf::RectangleShape* s)
 {
+	this->PhysicParticle = new MyParticle();
+	this->RectParticle = p;
+	this->CircParticle = new CircleRb();
+
+	this->ParticleShape = NULL;
+	this->rectShape = s;
+	this->circleShape = NULL;
+
 	this->particleType = p->particleType;
 }
-RenderParticle::RenderParticle(CircleRb* p, sf::CircleShape* s) : CircParticle(p), circleShape(s)
+
+RenderParticle::RenderParticle(CircleRb* p, sf::CircleShape* s)
 {
+	this->PhysicParticle = new MyParticle();
+	this->RectParticle = new RectPrismRb();
+	this->CircParticle = p;
+
+	this->ParticleShape = NULL;
+	this->rectShape = NULL;
+	this->circleShape = s;
+
 	this->particleType = p->particleType;
 }

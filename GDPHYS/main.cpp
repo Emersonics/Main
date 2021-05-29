@@ -41,7 +41,7 @@ void instantiateParticles(std::list<RenderParticle*>& RenderParticles, PhysicsWo
 float RandomFloat(float a, float b);
 
 //0 = Particle 1 = Rigid 2 = Circ 3 = Rect
-enum particleType {Particle = 0, Rigid, Circ, Rect};
+enum particleType { Particle = 0, Rigid, Circ, Rect };
 
 int main() {
     srand(time(NULL));
@@ -61,7 +61,7 @@ int main() {
     //RectPrismRb* originParticle = new RectPrismRb(5.0f, MyVector(100, 0), MyVector(0, 0), MyVector(0, 0), 100, true);
     RectPrismRb* rectParticle = new RectPrismRb();
     //position of shape
-    rectParticle->position = MyVector(100, 0);
+    rectParticle->position = MyVector(245, 200);
     //velocity of shape
     rectParticle->velocity = MyVector(0, 0);
     //acceleration of shape
@@ -69,17 +69,17 @@ int main() {
     rectParticle->dampening = 1;
     rectParticle->lifeSpan = 100.0f;
     rectParticle->mass = 5.0;
-    rectParticle->w = 5;
-    rectParticle->h = 3; 
+    rectParticle->w = 100;
+    rectParticle->h = 200;
     rectParticle->initializeRb((int)particleType::Rect);
-    rectParticle->dampening = 1;
     rectParticle->restitution = 0.6;
     particleList.push_back((MyParticle*)rectParticle);
     pWorld.addParticle((MyParticle*)rectParticle);
 
     sf::RectangleShape rectShape(sf::Vector2f(rectParticle->w, rectParticle->h));
     rectShape.setFillColor(sf::Color::White);
-    rectParticle->position = Utils::P6ToSFMLPoint(MyVector(245, 20));
+    rectShape.setOutlineColor(sf::Color::White);
+    rectParticle->position = Utils::P6ToSFMLPoint(MyVector(245, 200));
     rectShape.setOrigin(rectParticle->w / 2, rectParticle->h / 2);
     rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
     rectList.push_back(&rectShape);
@@ -88,7 +88,7 @@ int main() {
     RenderParticle c_rp = RenderParticle(rectParticle, &rectShape);
     RenderParticles.push_back(&c_rp);
 
-    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10000, 0));
+    rectParticle->AddForceOnPoint(MyVector(0, 10), MyVector(10, 0));
 
 
     /*//texture
@@ -165,100 +165,100 @@ int main() {
     r7->particles[1] = referencePoint4;
     r7->length = referencePoint1->position.getMagnitude(referencePoint4->position);
     pWorld.Links.push_back(r7);*/
-     
+
     /*Rod* r8 = new Rod();
     r8->particles[0] = referencePoint4;
     r8->particles[1] = referencePoint1;
     r8->length = referencePoint4->position.getMagnitude(referencePoint1->position);
     pWorld.Links.push_back(r8);*/
-/*
-    Rod* r1 = new Rod();
-    r1->particles[0] = originPoint;
-    r1->particles[1] = referencePoint1;
-    r1->length = originPoint->position.getMagnitude(referencePoint1->position);
-    pWorld.Links.push_back(r1);
+    /*
+        Rod* r1 = new Rod();
+        r1->particles[0] = originPoint;
+        r1->particles[1] = referencePoint1;
+        r1->length = originPoint->position.getMagnitude(referencePoint1->position);
+        pWorld.Links.push_back(r1);
 
-    Rod* r3 = new Rod();
-    r3->particles[0] = originPoint;
-    r3->particles[1] = referencePoint3;
-    r3->length = 100;
-    pWorld.Links.push_back(r3);
+        Rod* r3 = new Rod();
+        r3->particles[0] = originPoint;
+        r3->particles[1] = referencePoint3;
+        r3->length = 100;
+        pWorld.Links.push_back(r3);
 
-    Rod* r2 = new Rod();
-    r2->particles[0] = originPoint;
-    r2->particles[1] = referencePoint2;
-    r2->length = 100;
-    pWorld.Links.push_back(r2);
+        Rod* r2 = new Rod();
+        r2->particles[0] = originPoint;
+        r2->particles[1] = referencePoint2;
+        r2->length = 100;
+        pWorld.Links.push_back(r2);
 
-    Rod* r4 = new Rod();
-    r4->particles[0] = originPoint;
-    r4->particles[1] = referencePoint4;
-    r4->length = 100;
-    pWorld.Links.push_back(r4);
+        Rod* r4 = new Rod();
+        r4->particles[0] = originPoint;
+        r4->particles[1] = referencePoint4;
+        r4->length = 100;
+        pWorld.Links.push_back(r4);
 
-    //texture
-    sf::Texture t;
-    if (!t.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
+        //texture
+        sf::Texture t;
+        if (!t.loadFromFile("shuriken.png"))  std::cout << "Fail snowman loading" << std::endl;
 
-    sf::Sprite shuriken;
-    shuriken.setTexture(t);
-    shuriken.setOrigin(t.getSize().x / 2, t.getSize().y / 2);
-    MyVector shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
+        sf::Sprite shuriken;
+        shuriken.setTexture(t);
+        shuriken.setOrigin(t.getSize().x / 2, t.getSize().y / 2);
+        MyVector shurikenPos = Utils::P6ToSFMLPoint(originPoint->position);
 
-    MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
-    MyVector weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
-    MyVector weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
-    MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);
+        MyVector weightPos1 = Utils::P6ToSFMLPoint(referencePoint1->position);
+        MyVector weightPos2 = Utils::P6ToSFMLPoint(referencePoint2->position);
+        MyVector weightPos3 = Utils::P6ToSFMLPoint(referencePoint3->position);
+        MyVector weightPos4 = Utils::P6ToSFMLPoint(referencePoint4->position);
 
-    //base shape
-    sf::CircleShape shape(originPoint->radius);
-    shape.setFillColor(sf::Color::White);
-    shape.setOrigin(shape.getRadius(), shape.getRadius());
-    shapeList.push_back(&shape);
+        //base shape
+        sf::CircleShape shape(originPoint->radius);
+        shape.setFillColor(sf::Color::White);
+        shape.setOrigin(shape.getRadius(), shape.getRadius());
+        shapeList.push_back(&shape);
 
-    RenderParticle rP1 = RenderParticle(originPoint, &shape);
-    RenderParticles.push_back(&rP1);
+        RenderParticle rP1 = RenderParticle(originPoint, &shape);
+        RenderParticles.push_back(&rP1);
 
-    //weightShapes
-    sf::CircleShape wShape1(referencePoint1->radius);
-    wShape1.setFillColor(sf::Color::Blue);
-    wShape1.setOrigin(wShape1.getRadius(), wShape1.getRadius());
-    shapeList.push_back(&wShape1);
-    RenderParticle rP2 = RenderParticle(referencePoint1, &wShape1);
-    RenderParticles.push_back(&rP2);
+        //weightShapes
+        sf::CircleShape wShape1(referencePoint1->radius);
+        wShape1.setFillColor(sf::Color::Blue);
+        wShape1.setOrigin(wShape1.getRadius(), wShape1.getRadius());
+        shapeList.push_back(&wShape1);
+        RenderParticle rP2 = RenderParticle(referencePoint1, &wShape1);
+        RenderParticles.push_back(&rP2);
 
-    sf::CircleShape wShape2(referencePoint2->radius);
-    wShape2.setFillColor(sf::Color::Blue);
-    wShape2.setOrigin(wShape2.getRadius(), wShape2.getRadius());
-    shapeList.push_back(&wShape2);
-    RenderParticle rP3 = RenderParticle(referencePoint2, &wShape2);
-    RenderParticles.push_back(&rP3);
+        sf::CircleShape wShape2(referencePoint2->radius);
+        wShape2.setFillColor(sf::Color::Blue);
+        wShape2.setOrigin(wShape2.getRadius(), wShape2.getRadius());
+        shapeList.push_back(&wShape2);
+        RenderParticle rP3 = RenderParticle(referencePoint2, &wShape2);
+        RenderParticles.push_back(&rP3);
 
-    sf::CircleShape wShape3(referencePoint3->radius);
-    wShape3.setFillColor(sf::Color::Blue);
-    wShape3.setOrigin(wShape3.getRadius(), wShape3.getRadius());
-    shapeList.push_back(&wShape3);
-    RenderParticle rP4 = RenderParticle(referencePoint3, &wShape3);
-    RenderParticles.push_back(&rP4);
+        sf::CircleShape wShape3(referencePoint3->radius);
+        wShape3.setFillColor(sf::Color::Blue);
+        wShape3.setOrigin(wShape3.getRadius(), wShape3.getRadius());
+        shapeList.push_back(&wShape3);
+        RenderParticle rP4 = RenderParticle(referencePoint3, &wShape3);
+        RenderParticles.push_back(&rP4);
 
-    sf::CircleShape wShape4(referencePoint4->radius);
-    wShape4.setFillColor(sf::Color::Blue);
-    wShape4.setOrigin(wShape4.getRadius(), wShape4.getRadius());
-    shapeList.push_back(&wShape4);
-    RenderParticle rP5 = RenderParticle(referencePoint4, &wShape4);
-    RenderParticles.push_back(&rP5);
+        sf::CircleShape wShape4(referencePoint4->radius);
+        wShape4.setFillColor(sf::Color::Blue);
+        wShape4.setOrigin(wShape4.getRadius(), wShape4.getRadius());
+        shapeList.push_back(&wShape4);
+        RenderParticle rP5 = RenderParticle(referencePoint4, &wShape4);
+        RenderParticles.push_back(&rP5);
 
-    MyVector renderPoint = originPoint->GetRenderPoint();
-    shape.setPosition(renderPoint.x, renderPoint.y);
+        MyVector renderPoint = originPoint->GetRenderPoint();
+        shape.setPosition(renderPoint.x, renderPoint.y);
 
-    renderPoint = referencePoint1->GetRenderPoint();
-    wShape1.setPosition(renderPoint.x, renderPoint.y);
-    //end of rotation lesson*/
+        renderPoint = referencePoint1->GetRenderPoint();
+        wShape1.setPosition(renderPoint.x, renderPoint.y);
+        //end of rotation lesson*/
 
-    /*pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
-    pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction*/
+        /*pWorld.forceRegistry.Add(particleList[0], &df);    //adds the friction
+        pWorld.forceRegistry.Add(particleList[1], &df);    //adds the friction*/
 
-    //custom variables
+        //custom variables
     int standing = 0;
 
     //clock/frame 
@@ -301,16 +301,17 @@ int main() {
             //end of Rotation lesson
 
             //
-            if(!stopTimer)
+            if (!stopTimer)
                 timer += (float)ms.count() / 1000;
 
             curr_ns -= timestep;
 
             //week 15
-            rectParticle->position = Utils::P6ToSFMLPoint(rectParticle->position);
+            //rectParticle->position = Utils::P6ToSFMLPoint(rectParticle->position);
             rectShape.setPosition(rectParticle->position.x, rectParticle->position.y);
-            rectShape.setRotation(rectParticle->rotation * (180/acos(-1.0f)));
-
+            rectShape.setRotation(rectParticle->rotation * (180 / acos(-1.0f)));
+            //cout << "X: " << rectParticle->position.x << " Y: " << rectParticle->position.y << endl;
+            //cout << "X: " << rectShape.getPosition().x << " Y: " << rectShape.getPosition().y << endl;
             while (window.pollEvent(event))
             {
                 switch (event.type)
