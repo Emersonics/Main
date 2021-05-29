@@ -81,7 +81,7 @@ MyVector MyVector::ComponentProduct(const MyVector v)
 
 float MyVector::getScalarProduct(MyVector vec1, MyVector vec2)
 {
-	return (vec1.x * vec2.y) - (vec1.y * vec2.x);
+	return (vec1.x * vec2.y) + (vec1.y * vec2.x);
 }
 
 MyVector MyVector::getVectorProduct(MyVector vec1, MyVector vec2)
